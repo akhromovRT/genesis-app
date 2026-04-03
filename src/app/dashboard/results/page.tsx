@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { db } from "@/db";
+import { testResults } from "@/db/schema";
+import { eq, desc } from "drizzle-orm";
+import { getUser } from "@/lib/auth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/format";
@@ -12,18 +15,27 @@ export const metadata: Metadata = {
 };
 
 export default async function ResultsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const user = await getUser();
   if (!user) redirect("/login?redirect=/dashboard/results");
 
-  const { data: results } = await supabase
-    .from("test_results")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+  const resultsRaw = await db
+    .select()
+    .from(testResults)
+    .where(eq(testResults.userId, user.id))
+    .orderBy(desc(testResults.createdAt));
+
+  const results: TestResult[] = resultsRaw.map((r) => ({
+    id: r.id,
+    order_id: r.orderId,
+    order_item_id: r.orderItemId ?? null,
+    user_id: r.userId,
+    file_url: r.fileUrl,
+    file_name: r.fileName,
+    file_size: r.fileSize ?? null,
+    description: r.description ?? "",
+    uploaded_by: r.uploadedBy ?? null,
+    created_at: r.createdAt?.toISOString() ?? "",
+  }));
 
   return (
     <div>
@@ -32,9 +44,9 @@ export default async function ResultsPage() {
         Результаты ваших генетических тестов
       </p>
 
-      {results && results.length > 0 ? (
+      {results.length > 0 ? (
         <div className="mt-8 space-y-4">
-          {(results as TestResult[]).map((result) => (
+          {results.map((result) => (
             <Card key={result.id}>
               <CardContent className="flex items-center gap-4 p-5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">

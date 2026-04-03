@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { tests, categories } from "@/db/schema";
+import { eq, and, ilike, asc, desc } from "drizzle-orm";
 import { TestCard } from "@/components/catalog/test-card";
 import { CategoryFilter } from "@/components/catalog/category-filter";
 import { SearchBar } from "@/components/catalog/search-bar";
@@ -18,39 +20,80 @@ interface CatalogPageProps {
 
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   const params = await searchParams;
-  const supabase = await createClient();
 
   // Fetch categories
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("is_active", true)
-    .order("sort_order");
+  const categoriesRaw = await db
+    .select()
+    .from(categories)
+    .where(eq(categories.isActive, true))
+    .orderBy(asc(categories.sortOrder));
 
-  // Build tests query
-  let testsQuery = supabase
-    .from("tests")
-    .select("*, categories(*)")
-    .eq("is_active", true)
-    .order("is_popular", { ascending: false })
-    .order("price", { ascending: true });
+  const mappedCategories: Category[] = categoriesRaw.map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    description: c.description ?? "",
+    sort_order: c.sortOrder ?? 0,
+    is_active: c.isActive ?? true,
+    image_url: c.imageUrl ?? null,
+    created_at: c.createdAt?.toISOString() ?? "",
+    updated_at: c.updatedAt?.toISOString() ?? "",
+  }));
 
-  // Filter by category
+  // Build conditions for tests query
+  const conditions = [eq(tests.isActive, true)];
+
   if (params.category) {
-    const category = (categories as Category[] | null)?.find(
-      (c) => c.slug === params.category
-    );
+    const category = mappedCategories.find((c) => c.slug === params.category);
     if (category) {
-      testsQuery = testsQuery.eq("category_id", category.id);
+      conditions.push(eq(tests.categoryId, category.id));
     }
   }
 
-  // Search by name
   if (params.q) {
-    testsQuery = testsQuery.ilike("name", `%${params.q}%`);
+    conditions.push(ilike(tests.name, `%${params.q}%`));
   }
 
-  const { data: tests } = await testsQuery;
+  const testsRaw = await db
+    .select()
+    .from(tests)
+    .leftJoin(categories, eq(tests.categoryId, categories.id))
+    .where(and(...conditions))
+    .orderBy(desc(tests.isPopular), asc(tests.price));
+
+  const mappedTests: TestWithCategory[] = testsRaw.map((row) => ({
+    id: row.tests.id,
+    category_id: row.tests.categoryId,
+    name: row.tests.name,
+    slug: row.tests.slug,
+    code: row.tests.code ?? "",
+    price: row.tests.price,
+    description: row.tests.description ?? "",
+    full_description: row.tests.fullDescription ?? "",
+    markers_count: row.tests.markersCount ?? null,
+    turnaround_days: row.tests.turnaroundDays ?? null,
+    biomaterial: row.tests.biomaterial ?? "",
+    is_active: row.tests.isActive ?? true,
+    is_popular: row.tests.isPopular ?? false,
+    image_url: row.tests.imageUrl ?? null,
+    meta_title: row.tests.metaTitle ?? null,
+    meta_description: row.tests.metaDescription ?? null,
+    created_at: row.tests.createdAt?.toISOString() ?? "",
+    updated_at: row.tests.updatedAt?.toISOString() ?? "",
+    categories: row.categories
+      ? {
+          id: row.categories.id,
+          name: row.categories.name,
+          slug: row.categories.slug,
+          description: row.categories.description ?? "",
+          sort_order: row.categories.sortOrder ?? 0,
+          is_active: row.categories.isActive ?? true,
+          image_url: row.categories.imageUrl ?? null,
+          created_at: row.categories.createdAt?.toISOString() ?? "",
+          updated_at: row.categories.updatedAt?.toISOString() ?? "",
+        }
+      : ({} as Category),
+  }));
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -71,14 +114,14 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
           <SearchBar />
         </Suspense>
         <Suspense>
-          <CategoryFilter categories={(categories as Category[]) || []} />
+          <CategoryFilter categories={mappedCategories} />
         </Suspense>
       </div>
 
       {/* Results */}
-      {tests && tests.length > 0 ? (
+      {mappedTests.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {(tests as TestWithCategory[]).map((test) => (
+          {mappedTests.map((test) => (
             <TestCard key={test.id} test={test} />
           ))}
         </div>
@@ -93,9 +136,9 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       )}
 
       {/* Count */}
-      {tests && tests.length > 0 && (
+      {mappedTests.length > 0 && (
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          Найдено тестов: {tests.length}
+          Найдено тестов: {mappedTests.length}
         </p>
       )}
     </div>

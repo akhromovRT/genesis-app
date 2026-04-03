@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { tests, categories } from "@/db/schema";
+import { eq, asc } from "drizzle-orm";
 import { TestForm } from "@/components/admin/test-form";
 import type { Category, Test } from "@/types/database";
 
@@ -9,21 +11,53 @@ interface EditTestPageProps {
 
 export default async function EditTestPage({ params }: EditTestPageProps) {
   const { id } = await params;
-  const supabase = await createClient();
 
-  const { data: test } = await supabase
-    .from("tests")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const [testRaw] = await db
+    .select()
+    .from(tests)
+    .where(eq(tests.id, id))
+    .limit(1);
 
-  if (!test) notFound();
+  if (!testRaw) notFound();
 
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("is_active", true)
-    .order("sort_order");
+  const categoriesRaw = await db
+    .select()
+    .from(categories)
+    .where(eq(categories.isActive, true))
+    .orderBy(asc(categories.sortOrder));
+
+  const mappedCategories: Category[] = categoriesRaw.map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    description: c.description ?? "",
+    sort_order: c.sortOrder ?? 0,
+    is_active: c.isActive ?? true,
+    image_url: c.imageUrl ?? null,
+    created_at: c.createdAt?.toISOString() ?? "",
+    updated_at: c.updatedAt?.toISOString() ?? "",
+  }));
+
+  const mappedTest: Test = {
+    id: testRaw.id,
+    category_id: testRaw.categoryId,
+    name: testRaw.name,
+    slug: testRaw.slug,
+    code: testRaw.code ?? "",
+    price: testRaw.price,
+    description: testRaw.description ?? "",
+    full_description: testRaw.fullDescription ?? "",
+    markers_count: testRaw.markersCount ?? null,
+    turnaround_days: testRaw.turnaroundDays ?? null,
+    biomaterial: testRaw.biomaterial ?? "",
+    is_active: testRaw.isActive ?? true,
+    is_popular: testRaw.isPopular ?? false,
+    image_url: testRaw.imageUrl ?? null,
+    meta_title: testRaw.metaTitle ?? null,
+    meta_description: testRaw.metaDescription ?? null,
+    created_at: testRaw.createdAt?.toISOString() ?? "",
+    updated_at: testRaw.updatedAt?.toISOString() ?? "",
+  };
 
   return (
     <div>
@@ -31,8 +65,8 @@ export default async function EditTestPage({ params }: EditTestPageProps) {
         Редактировать тест
       </h1>
       <TestForm
-        categories={(categories as Category[]) || []}
-        initialData={test as Test}
+        categories={mappedCategories}
+        initialData={mappedTest}
       />
     </div>
   );

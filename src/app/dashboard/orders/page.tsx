@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { db } from "@/db";
+import { orders } from "@/db/schema";
+import { eq, desc } from "drizzle-orm";
+import { getUser } from "@/lib/auth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice, formatDate } from "@/lib/format";
@@ -13,19 +16,37 @@ export const metadata: Metadata = {
   title: "Мои заказы",
 };
 
-export default async function OrdersPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+function mapOrder(o: typeof orders.$inferSelect): Order {
+  return {
+    id: o.id,
+    order_number: o.orderNumber,
+    user_id: o.userId ?? null,
+    status: o.status as OrderStatus,
+    total_amount: o.totalAmount,
+    customer_name: o.customerName,
+    customer_email: o.customerEmail,
+    customer_phone: o.customerPhone,
+    delivery_address: o.deliveryAddress ?? "",
+    notes: o.notes ?? "",
+    payment_id: o.paymentId ?? null,
+    payment_status: o.paymentStatus ?? null,
+    paid_at: o.paidAt?.toISOString() ?? null,
+    created_at: o.createdAt?.toISOString() ?? "",
+    updated_at: o.updatedAt?.toISOString() ?? "",
+  };
+}
 
+export default async function OrdersPage() {
+  const user = await getUser();
   if (!user) redirect("/login?redirect=/dashboard/orders");
 
-  const { data: orders } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+  const userOrdersRaw = await db
+    .select()
+    .from(orders)
+    .where(eq(orders.userId, user.id))
+    .orderBy(desc(orders.createdAt));
+
+  const userOrders: Order[] = userOrdersRaw.map(mapOrder);
 
   return (
     <div>
@@ -34,9 +55,9 @@ export default async function OrdersPage() {
         История ваших заказов генетических тестов
       </p>
 
-      {orders && orders.length > 0 ? (
+      {userOrders.length > 0 ? (
         <div className="mt-8 space-y-4">
-          {(orders as Order[]).map((order) => {
+          {userOrders.map((order) => {
             const statusInfo = ORDER_STATUSES[order.status as OrderStatus];
             return (
               <Link key={order.id} href={`/dashboard/orders/${order.id}`}>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,25 +25,14 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function loadProfile() {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-
-      if (profile) {
-        setForm({
-          fullName: profile.full_name || "",
-          email: profile.email || "",
-          phone: profile.phone || "",
-        });
-      }
+      const res = await fetch("/api/profile");
+      if (!res.ok) return;
+      const profile = await res.json();
+      setForm({
+        fullName: profile.fullName || "",
+        email: profile.email || "",
+        phone: profile.phone || "",
+      });
       setLoading(false);
     }
     loadProfile();
@@ -53,21 +41,14 @@ export default function ProfilePage() {
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        full_name: form.fullName,
-        phone: form.phone,
-      })
-      .eq("id", user.id);
+    const res = await fetch("/api/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fullName: form.fullName, phone: form.phone }),
+    });
 
-    if (error) {
+    if (!res.ok) {
       toast.error("Ошибка сохранения профиля");
     } else {
       toast.success("Профиль обновлён");
@@ -87,13 +68,16 @@ export default function ProfilePage() {
     }
 
     setChangingPassword(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.updateUser({
-      password: passwords.newPassword,
+
+    const res = await fetch("/api/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: passwords.newPassword }),
     });
 
-    if (error) {
-      toast.error(error.message);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      toast.error(data.error || "Ошибка смены пароля");
     } else {
       toast.success("Пароль изменён");
       setPasswords({ newPassword: "", confirmPassword: "" });

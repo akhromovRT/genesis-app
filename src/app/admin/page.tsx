@@ -1,44 +1,39 @@
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { orders, profiles } from "@/db/schema";
+import { eq, sql, inArray } from "drizzle-orm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPrice } from "@/lib/format";
 import { Package, CreditCard, Clock, CheckCircle } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const supabase = await createClient();
+  const [{ value: totalOrders }] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(orders);
 
-  const { count: totalOrders } = await supabase
-    .from("orders")
-    .select("*", { count: "exact", head: true });
+  const [{ value: paidOrders }] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(orders)
+    .where(eq(orders.status, "paid"));
 
-  const { count: paidOrders } = await supabase
-    .from("orders")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "paid");
+  const [{ value: processingOrders }] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(orders)
+    .where(eq(orders.status, "processing"));
 
-  const { count: processingOrders } = await supabase
-    .from("orders")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "processing");
+  const [{ value: completedOrders }] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(orders)
+    .where(eq(orders.status, "completed"));
 
-  const { count: completedOrders } = await supabase
-    .from("orders")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "completed");
+  const [{ value: totalRevenue }] = await db
+    .select({ value: sql<number>`coalesce(sum(total_amount), 0)::int` })
+    .from(orders)
+    .where(inArray(orders.status, ["paid", "processing", "ready", "completed"]));
 
-  const { data: revenueData } = await supabase
-    .from("orders")
-    .select("total_amount")
-    .in("status", ["paid", "processing", "ready", "completed"]);
-
-  const totalRevenue = revenueData?.reduce(
-    (sum, o) => sum + (o.total_amount || 0),
-    0
-  ) || 0;
-
-  const { count: totalUsers } = await supabase
-    .from("profiles")
-    .select("*", { count: "exact", head: true })
-    .eq("role", "user");
+  const [{ value: totalUsers }] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(profiles)
+    .where(eq(profiles.role, "user"));
 
   const stats = [
     {
@@ -48,7 +43,7 @@ export default async function AdminDashboard() {
     },
     {
       title: "Выручка",
-      value: formatPrice(totalRevenue),
+      value: formatPrice(totalRevenue || 0),
       icon: CreditCard,
     },
     {

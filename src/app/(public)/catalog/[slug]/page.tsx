@@ -1,28 +1,64 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { tests, categories } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { formatPrice, pluralize } from "@/lib/format";
 import { Clock, Dna, FlaskConical, ArrowLeft } from "lucide-react";
-import type { TestWithCategory } from "@/types/database";
+import type { Category, TestWithCategory } from "@/types/database";
 
 interface TestPageProps {
   params: Promise<{ slug: string }>;
 }
 
-async function getTest(slug: string) {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("tests")
-    .select("*, categories(*)")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
-  return data as TestWithCategory | null;
+async function getTest(slug: string): Promise<TestWithCategory | null> {
+  const [row] = await db
+    .select()
+    .from(tests)
+    .leftJoin(categories, eq(tests.categoryId, categories.id))
+    .where(and(eq(tests.slug, slug), eq(tests.isActive, true)))
+    .limit(1);
+
+  if (!row) return null;
+
+  return {
+    id: row.tests.id,
+    category_id: row.tests.categoryId,
+    name: row.tests.name,
+    slug: row.tests.slug,
+    code: row.tests.code ?? "",
+    price: row.tests.price,
+    description: row.tests.description ?? "",
+    full_description: row.tests.fullDescription ?? "",
+    markers_count: row.tests.markersCount ?? null,
+    turnaround_days: row.tests.turnaroundDays ?? null,
+    biomaterial: row.tests.biomaterial ?? "",
+    is_active: row.tests.isActive ?? true,
+    is_popular: row.tests.isPopular ?? false,
+    image_url: row.tests.imageUrl ?? null,
+    meta_title: row.tests.metaTitle ?? null,
+    meta_description: row.tests.metaDescription ?? null,
+    created_at: row.tests.createdAt?.toISOString() ?? "",
+    updated_at: row.tests.updatedAt?.toISOString() ?? "",
+    categories: row.categories
+      ? {
+          id: row.categories.id,
+          name: row.categories.name,
+          slug: row.categories.slug,
+          description: row.categories.description ?? "",
+          sort_order: row.categories.sortOrder ?? 0,
+          is_active: row.categories.isActive ?? true,
+          image_url: row.categories.imageUrl ?? null,
+          created_at: row.categories.createdAt?.toISOString() ?? "",
+          updated_at: row.categories.updatedAt?.toISOString() ?? "",
+        }
+      : ({} as Category),
+  };
 }
 
 export async function generateMetadata({

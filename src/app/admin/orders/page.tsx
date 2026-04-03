@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { orders } from "@/db/schema";
+import { desc } from "drizzle-orm";
 import {
   Table,
   TableBody,
@@ -14,12 +16,28 @@ import { ORDER_STATUSES } from "@/config/site";
 import type { Order, OrderStatus } from "@/types/database";
 
 export default async function AdminOrdersPage() {
-  const supabase = await createClient();
+  const ordersRaw = await db
+    .select()
+    .from(orders)
+    .orderBy(desc(orders.createdAt));
 
-  const { data: orders } = await supabase
-    .from("orders")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const mappedOrders: Order[] = ordersRaw.map((o) => ({
+    id: o.id,
+    order_number: o.orderNumber,
+    user_id: o.userId ?? null,
+    status: o.status as OrderStatus,
+    total_amount: o.totalAmount,
+    customer_name: o.customerName,
+    customer_email: o.customerEmail,
+    customer_phone: o.customerPhone,
+    delivery_address: o.deliveryAddress ?? "",
+    notes: o.notes ?? "",
+    payment_id: o.paymentId ?? null,
+    payment_status: o.paymentStatus ?? null,
+    paid_at: o.paidAt?.toISOString() ?? null,
+    created_at: o.createdAt?.toISOString() ?? "",
+    updated_at: o.updatedAt?.toISOString() ?? "",
+  }));
 
   return (
     <div>
@@ -40,8 +58,8 @@ export default async function AdminOrdersPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders && orders.length > 0 ? (
-              (orders as Order[]).map((order) => {
+            {mappedOrders.length > 0 ? (
+              mappedOrders.map((order) => {
                 const statusInfo =
                   ORDER_STATUSES[order.status as OrderStatus];
                 return (

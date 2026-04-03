@@ -1,7 +1,10 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { orders, orderItems, orderStatusHistory } from "@/db/schema";
+import { eq, and, asc } from "drizzle-orm";
+import { getUser } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -30,34 +33,62 @@ export default async function OrderDetailPage({
   params,
 }: OrderDetailPageProps) {
   const { id } = await params;
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
   if (!user) redirect("/login");
 
-  const { data: order } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .single();
+  const [orderRaw] = await db
+    .select()
+    .from(orders)
+    .where(and(eq(orders.id, id), eq(orders.userId, user.id)))
+    .limit(1);
 
-  if (!order) notFound();
+  if (!orderRaw) notFound();
 
-  const typedOrder = order as Order;
+  const typedOrder: Order = {
+    id: orderRaw.id,
+    order_number: orderRaw.orderNumber,
+    user_id: orderRaw.userId ?? null,
+    status: orderRaw.status as OrderStatus,
+    total_amount: orderRaw.totalAmount,
+    customer_name: orderRaw.customerName,
+    customer_email: orderRaw.customerEmail,
+    customer_phone: orderRaw.customerPhone,
+    delivery_address: orderRaw.deliveryAddress ?? "",
+    notes: orderRaw.notes ?? "",
+    payment_id: orderRaw.paymentId ?? null,
+    payment_status: orderRaw.paymentStatus ?? null,
+    paid_at: orderRaw.paidAt?.toISOString() ?? null,
+    created_at: orderRaw.createdAt?.toISOString() ?? "",
+    updated_at: orderRaw.updatedAt?.toISOString() ?? "",
+  };
 
-  const { data: items } = await supabase
-    .from("order_items")
-    .select("*")
-    .eq("order_id", id);
+  const itemsRaw = await db
+    .select()
+    .from(orderItems)
+    .where(eq(orderItems.orderId, id));
 
-  const { data: history } = await supabase
-    .from("order_status_history")
-    .select("*")
-    .eq("order_id", id)
-    .order("created_at", { ascending: true });
+  const items: OrderItem[] = itemsRaw.map((i) => ({
+    id: i.id,
+    order_id: i.orderId,
+    test_id: i.testId,
+    test_name: i.testName,
+    price: i.price,
+    quantity: i.quantity,
+    created_at: i.createdAt?.toISOString() ?? "",
+  }));
+
+  const historyRaw = await db
+    .select()
+    .from(orderStatusHistory)
+    .where(eq(orderStatusHistory.orderId, id))
+    .orderBy(asc(orderStatusHistory.createdAt));
+
+  const history = historyRaw.map((h) => ({
+    id: h.id,
+    status: h.status,
+    comment: h.comment ?? "",
+    created_at: h.createdAt?.toISOString() ?? "",
+  }));
 
   const statusInfo = ORDER_STATUSES[typedOrder.status as OrderStatus];
   const currentStatusIndex = STATUS_ORDER.indexOf(
@@ -137,7 +168,7 @@ export default async function OrderDetailPage({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {(items as OrderItem[] | null)?.map((item) => (
+                {items.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center justify-between"
@@ -165,7 +196,7 @@ export default async function OrderDetailPage({
           </Card>
 
           {/* Status history */}
-          {history && history.length > 0 && (
+          {history.length > 0 && (
             <Card className="mt-6">
               <CardHeader>
                 <CardTitle>История</CardTitle>

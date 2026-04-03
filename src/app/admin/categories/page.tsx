@@ -1,4 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { categories } from "@/db/schema";
+import { asc } from "drizzle-orm";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -6,11 +8,22 @@ import { Badge } from "@/components/ui/badge";
 import type { Category } from "@/types/database";
 
 export default async function AdminCategoriesPage() {
-  const supabase = await createClient();
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*")
-    .order("sort_order");
+  const categoriesRaw = await db
+    .select()
+    .from(categories)
+    .orderBy(asc(categories.sortOrder));
+
+  const mappedCategories: Category[] = categoriesRaw.map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    description: c.description ?? "",
+    sort_order: c.sortOrder ?? 0,
+    is_active: c.isActive ?? true,
+    image_url: c.imageUrl ?? null,
+    created_at: c.createdAt?.toISOString() ?? "",
+    updated_at: c.updatedAt?.toISOString() ?? "",
+  }));
 
   return (
     <div>
@@ -30,7 +43,7 @@ export default async function AdminCategoriesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(categories as Category[] | null)?.map((cat) => (
+            {mappedCategories.map((cat) => (
               <TableRow key={cat.id}>
                 <TableCell className="font-medium">{cat.name}</TableCell>
                 <TableCell className="font-mono text-xs text-muted-foreground">

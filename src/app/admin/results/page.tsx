@@ -1,4 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { testResults } from "@/db/schema";
+import { desc } from "drizzle-orm";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -7,11 +9,23 @@ import { FileText } from "lucide-react";
 import type { TestResult } from "@/types/database";
 
 export default async function AdminResultsPage() {
-  const supabase = await createClient();
-  const { data: results } = await supabase
-    .from("test_results")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const resultsRaw = await db
+    .select()
+    .from(testResults)
+    .orderBy(desc(testResults.createdAt));
+
+  const results: TestResult[] = resultsRaw.map((r) => ({
+    id: r.id,
+    order_id: r.orderId,
+    order_item_id: r.orderItemId ?? null,
+    user_id: r.userId,
+    file_url: r.fileUrl,
+    file_name: r.fileName,
+    file_size: r.fileSize ?? null,
+    description: r.description ?? "",
+    uploaded_by: r.uploadedBy ?? null,
+    created_at: r.createdAt?.toISOString() ?? "",
+  }));
 
   return (
     <div>
@@ -21,7 +35,7 @@ export default async function AdminResultsPage() {
       </p>
 
       <div className="mt-8">
-        {results && results.length > 0 ? (
+        {results.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
@@ -31,7 +45,7 @@ export default async function AdminResultsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(results as TestResult[]).map((r) => (
+              {results.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell>
                     <a

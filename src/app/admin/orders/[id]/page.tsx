@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { orders, orderItems, testResults, orderStatusHistory } from "@/db/schema";
+import { eq, desc, asc } from "drizzle-orm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatPrice, formatDate, formatDateTime } from "@/lib/format";
@@ -16,33 +18,79 @@ interface AdminOrderPageProps {
 
 export default async function AdminOrderPage({ params }: AdminOrderPageProps) {
   const { id } = await params;
-  const supabase = await createClient();
 
-  const { data: order } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const [orderRaw] = await db
+    .select()
+    .from(orders)
+    .where(eq(orders.id, id))
+    .limit(1);
 
-  if (!order) notFound();
-  const o = order as Order;
+  if (!orderRaw) notFound();
 
-  const { data: items } = await supabase
-    .from("order_items")
-    .select("*")
-    .eq("order_id", id);
+  const o: Order = {
+    id: orderRaw.id,
+    order_number: orderRaw.orderNumber,
+    user_id: orderRaw.userId ?? null,
+    status: orderRaw.status as OrderStatus,
+    total_amount: orderRaw.totalAmount,
+    customer_name: orderRaw.customerName,
+    customer_email: orderRaw.customerEmail,
+    customer_phone: orderRaw.customerPhone,
+    delivery_address: orderRaw.deliveryAddress ?? "",
+    notes: orderRaw.notes ?? "",
+    payment_id: orderRaw.paymentId ?? null,
+    payment_status: orderRaw.paymentStatus ?? null,
+    paid_at: orderRaw.paidAt?.toISOString() ?? null,
+    created_at: orderRaw.createdAt?.toISOString() ?? "",
+    updated_at: orderRaw.updatedAt?.toISOString() ?? "",
+  };
 
-  const { data: results } = await supabase
-    .from("test_results")
-    .select("*")
-    .eq("order_id", id)
-    .order("created_at", { ascending: false });
+  const itemsRaw = await db
+    .select()
+    .from(orderItems)
+    .where(eq(orderItems.orderId, id));
 
-  const { data: history } = await supabase
-    .from("order_status_history")
-    .select("*")
-    .eq("order_id", id)
-    .order("created_at", { ascending: true });
+  const items: OrderItem[] = itemsRaw.map((i) => ({
+    id: i.id,
+    order_id: i.orderId,
+    test_id: i.testId,
+    test_name: i.testName,
+    price: i.price,
+    quantity: i.quantity,
+    created_at: i.createdAt?.toISOString() ?? "",
+  }));
+
+  const resultsRaw = await db
+    .select()
+    .from(testResults)
+    .where(eq(testResults.orderId, id))
+    .orderBy(desc(testResults.createdAt));
+
+  const results: TestResult[] = resultsRaw.map((r) => ({
+    id: r.id,
+    order_id: r.orderId,
+    order_item_id: r.orderItemId ?? null,
+    user_id: r.userId,
+    file_url: r.fileUrl,
+    file_name: r.fileName,
+    file_size: r.fileSize ?? null,
+    description: r.description ?? "",
+    uploaded_by: r.uploadedBy ?? null,
+    created_at: r.createdAt?.toISOString() ?? "",
+  }));
+
+  const historyRaw = await db
+    .select()
+    .from(orderStatusHistory)
+    .where(eq(orderStatusHistory.orderId, id))
+    .orderBy(asc(orderStatusHistory.createdAt));
+
+  const history = historyRaw.map((h) => ({
+    id: h.id,
+    status: h.status,
+    comment: h.comment ?? "",
+    created_at: h.createdAt?.toISOString() ?? "",
+  }));
 
   return (
     <div>
@@ -75,7 +123,7 @@ export default async function AdminOrderPage({ params }: AdminOrderPageProps) {
               <CardTitle>Состав заказа</CardTitle>
             </CardHeader>
             <CardContent>
-              {(items as OrderItem[] | null)?.map((item) => (
+              {items.map((item) => (
                 <div key={item.id} className="flex justify-between py-2">
                   <div>
                     <p className="font-medium">{item.test_name}</p>
@@ -116,13 +164,13 @@ export default async function AdminOrderPage({ params }: AdminOrderPageProps) {
           </Card>
 
           {/* Uploaded results */}
-          {results && results.length > 0 && (
+          {results.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>Загруженные результаты</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {(results as TestResult[]).map((r) => (
+                {results.map((r) => (
                   <div key={r.id} className="flex items-center gap-3">
                     <FileText className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1">
@@ -146,7 +194,7 @@ export default async function AdminOrderPage({ params }: AdminOrderPageProps) {
           )}
 
           {/* History */}
-          {history && history.length > 0 && (
+          {history.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>История статусов</CardTitle>
