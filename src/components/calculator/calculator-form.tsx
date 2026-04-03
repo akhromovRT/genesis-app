@@ -13,16 +13,16 @@ import { MARKERS, calculatePhenoAge, type BiomarkerInput, type PhenoAgeResult } 
 import { CalculatorResult } from "@/components/calculator/calculator-result";
 
 const schema = z.object({
-  age: z.number({ invalid_type_error: "Введите возраст" }).min(18, "Минимум 18 лет").max(120, "Максимум 120 лет"),
-  albumin: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  creatinine: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  glucose: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  crp: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  lymphocyte: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  mcv: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  rdw: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  alp: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
-  wbc: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  age: z.number().min(18, "Минимум 18 лет").max(120, "Максимум 120 лет"),
+  albumin: z.number().positive("Введите значение"),
+  creatinine: z.number().positive("Введите значение"),
+  glucose: z.number().positive("Введите значение"),
+  crp: z.number().positive("Введите значение"),
+  lymphocyte: z.number().positive("Введите значение"),
+  mcv: z.number().positive("Введите значение"),
+  rdw: z.number().positive("Введите значение"),
+  alp: z.number().positive("Введите значение"),
+  wbc: z.number().positive("Введите значение"),
 });
 
 export function CalculatorForm() {
