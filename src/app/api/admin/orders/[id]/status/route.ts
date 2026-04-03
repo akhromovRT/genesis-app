@@ -1,18 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { db } from "@/db";
+import { orders, orderStatusHistory } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
 
 const statusSchema = z.object({
-  status: z.enum([
-    "pending",
-    "paid",
-    "processing",
-    "ready",
-    "completed",
-    "cancelled",
-    "refunded",
-  ]),
+  status: z.enum(["pending", "paid", "processing", "ready", "completed", "cancelled", "refunded"]),
   comment: z.string().optional(),
 });
 
@@ -22,48 +16,21 @@ export async function PUT(
 ) {
   const { id } = await params;
 
-  // Verify admin
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role !== "admin") {
+  let admin;
+  try {
+    admin = await requireAdmin();
+  } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const body = await request.json();
   const data = statusSchema.parse(body);
 
-  const adminDb = createAdminClient();
-
-  // Update order status
-  const { error: updateError } = await adminDb
-    .from("orders")
-    .update({ status: data.status })
-    .eq("id", id);
-
-  if (updateError) {
-    return NextResponse.json(
-      { error: "Ошибка обновления статуса" },
-      { status: 500 }
-    );
-  }
-
-  // Log status change
-  await adminDb.from("order_status_history").insert({
-    order_id: id,
+  await db.update(orders).set({ status: data.status }).where(eq(orders.id, id));
+  await db.insert(orderStatusHistory).values({
+    orderId: id,
     status: data.status,
-    changed_by: user.id,
+    changedBy: admin.id,
     comment: data.comment || "",
   });
 

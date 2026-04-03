@@ -1,76 +1,33 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-
-async function verifyAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  return profile?.role === "admin" ? user : null;
-}
+import { db } from "@/db";
+import { tests } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { requireAdmin } from "@/lib/auth";
 
 export async function POST(request: Request) {
-  const admin = await verifyAdmin();
-  if (!admin)
+  try {
+    await requireAdmin();
+  } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-
-  const body = await request.json();
-  const adminDb = createAdminClient();
-
-  const { data, error } = await adminDb
-    .from("tests")
-    .insert(body)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Create test error:", error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
   }
 
+  const body = await request.json();
+  const [data] = await db.insert(tests).values(body).returning();
   return NextResponse.json(data);
 }
 
 export async function PUT(request: Request) {
-  const admin = await verifyAdmin();
-  if (!admin)
+  try {
+    await requireAdmin();
+  } catch {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
-  if (!id) {
-    return NextResponse.json({ error: "ID required" }, { status: 400 });
-  }
+  if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
   const body = await request.json();
-  const adminDb = createAdminClient();
-
-  const { data, error } = await adminDb
-    .from("tests")
-    .update(body)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Update test error:", error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
-  }
-
+  const [data] = await db.update(tests).set(body).where(eq(tests.id, id)).returning();
   return NextResponse.json(data);
 }

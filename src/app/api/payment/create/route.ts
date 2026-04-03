@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { tests, orders, orderItems, orderStatusHistory } from "@/db/schema";
+import { eq, and, inArray } from "drizzle-orm";
+import { getUser } from "@/lib/auth";
 import { z } from "zod";
 
 const checkoutSchema = z.object({
@@ -9,14 +11,12 @@ const checkoutSchema = z.object({
   customerPhone: z.string().min(10, "Введите телефон"),
   deliveryAddress: z.string().optional(),
   notes: z.string().optional(),
-  items: z.array(
-    z.object({
-      testId: z.string().uuid(),
-      testName: z.string(),
-      price: z.number().positive(),
-      quantity: z.number().int().positive(),
-    })
-  ).min(1, "Корзина пуста"),
+  items: z.array(z.object({
+    testId: z.string().uuid(),
+    testName: z.string(),
+    price: z.number().positive(),
+    quantity: z.number().int().positive(),
+  })).min(1, "Корзина пуста"),
 });
 
 export async function POST(request: Request) {
@@ -24,115 +24,59 @@ export async function POST(request: Request) {
     const body = await request.json();
     const data = checkoutSchema.parse(body);
 
-    const adminDb = createAdminClient();
-
-    // Verify prices against DB to prevent tampering
     const testIds = data.items.map((i) => i.testId);
-    const { data: tests, error: testsError } = await adminDb
-      .from("tests")
-      .select("id, name, price")
-      .in("id", testIds)
-      .eq("is_active", true);
+    const dbTests = await db.select({ id: tests.id, name: tests.name, price: tests.price })
+      .from(tests)
+      .where(and(inArray(tests.id, testIds), eq(tests.isActive, true)));
 
-    if (testsError || !tests || tests.length !== testIds.length) {
-      return NextResponse.json(
-        { error: "Один или несколько тестов недоступны" },
-        { status: 400 }
-      );
+    if (dbTests.length !== testIds.length) {
+      return NextResponse.json({ error: "Один или несколько тестов недоступны" }, { status: 400 });
     }
 
-    // Build verified items with DB prices
     const verifiedItems = data.items.map((item) => {
-      const dbTest = tests.find((t) => t.id === item.testId);
-      if (!dbTest) throw new Error("Test not found");
-      return {
-        test_id: item.testId,
-        test_name: dbTest.name,
-        price: dbTest.price, // use DB price, not client price
-        quantity: item.quantity,
-      };
+      const dbTest = dbTests.find((t) => t.id === item.testId)!;
+      return { testId: item.testId, testName: dbTest.name, price: dbTest.price, quantity: item.quantity };
     });
 
-    const totalAmount = verifiedItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
+    const totalAmount = verifiedItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const user = await getUser();
+
+    const [order] = await db.insert(orders).values({
+      userId: user?.id || null,
+      status: "paid",
+      totalAmount,
+      customerName: data.customerName,
+      customerEmail: data.customerEmail,
+      customerPhone: data.customerPhone,
+      deliveryAddress: data.deliveryAddress || "",
+      notes: data.notes || "",
+      paymentId: `STUB-${Date.now()}`,
+      paymentStatus: "succeeded",
+      paidAt: new Date(),
+    }).returning();
+
+    await db.insert(orderItems).values(
+      verifiedItems.map((item) => ({
+        orderId: order.id,
+        testId: item.testId,
+        testName: item.testName,
+        price: item.price,
+        quantity: item.quantity,
+      }))
     );
 
-    // Get current user (optional — guest checkout supported)
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    // Create order
-    const { data: order, error: orderError } = await adminDb
-      .from("orders")
-      .insert({
-        user_id: user?.id || null,
-        status: "paid", // STUB: skip payment, mark as paid immediately
-        total_amount: totalAmount,
-        customer_name: data.customerName,
-        customer_email: data.customerEmail,
-        customer_phone: data.customerPhone,
-        delivery_address: data.deliveryAddress || "",
-        notes: data.notes || "",
-        payment_id: `STUB-${Date.now()}`, // STUB: fake payment ID
-        payment_status: "succeeded", // STUB
-        paid_at: new Date().toISOString(), // STUB
-      })
-      .select()
-      .single();
-
-    if (orderError || !order) {
-      console.error("Order creation error:", orderError);
-      return NextResponse.json(
-        { error: "Ошибка создания заказа" },
-        { status: 500 }
-      );
-    }
-
-    // Create order items
-    const orderItems = verifiedItems.map((item) => ({
-      order_id: order.id,
-      ...item,
-    }));
-
-    const { error: itemsError } = await adminDb
-      .from("order_items")
-      .insert(orderItems);
-
-    if (itemsError) {
-      console.error("Order items error:", itemsError);
-      return NextResponse.json(
-        { error: "Ошибка создания позиций заказа" },
-        { status: 500 }
-      );
-    }
-
-    // Create status history entry
-    await adminDb.from("order_status_history").insert({
-      order_id: order.id,
+    await db.insert(orderStatusHistory).values({
+      orderId: order.id,
       status: "paid",
       comment: "Заказ создан и оплачен (заглушка оплаты)",
     });
 
-    // TODO: Replace with real YooKassa integration
-    // For now, return success directly instead of redirect to payment page
-    return NextResponse.json({
-      success: true,
-      orderId: order.id,
-      orderNumber: order.order_number,
-      // In production: confirmationUrl from YooKassa
-    });
+    return NextResponse.json({ success: true, orderId: order.id, orderNumber: order.orderNumber });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Проверьте введённые данные", details: error.issues },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Проверьте введённые данные", details: error.issues }, { status: 400 });
     }
     console.error("Payment create error:", error);
-    return NextResponse.json(
-      { error: "Внутренняя ошибка сервера" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Внутренняя ошибка сервера" }, { status: 500 });
   }
 }
