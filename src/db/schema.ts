@@ -8,6 +8,7 @@ import {
   uniqueIndex,
   index,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 // ── Profiles ──────────────────────────────────────────────────
 export const profiles = pgTable("profiles", {
@@ -65,7 +66,7 @@ export const tests = pgTable("tests", {
 // ── Orders ────────────────────────────────────────────────────
 export const orders = pgTable("orders", {
   id: uuid("id").primaryKey().defaultRandom(),
-  orderNumber: text("order_number").notNull().unique(),
+  orderNumber: text("order_number").notNull().unique().default(sql`generate_order_number()`),
   userId: uuid("user_id").references(() => profiles.id),
   status: text("status").notNull().default("pending"),
   totalAmount: integer("total_amount").notNull(),
