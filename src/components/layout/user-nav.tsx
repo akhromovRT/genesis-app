@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,19 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { User } from "@supabase/supabase-js";
 import { LogOut, Package, FileText, Settings } from "lucide-react";
+import type { AuthUser } from "@/lib/auth";
 
-function getInitials(email: string): string {
-  return email.charAt(0).toUpperCase();
-}
-
-export function UserNav({ user }: { user: User }) {
+export function UserNav({ user }: { user: AuthUser }) {
   const router = useRouter();
 
   async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    await fetch("/api/auth/logout", { method: "POST" });
     router.push("/");
     router.refresh();
   }
@@ -31,15 +25,12 @@ export function UserNav({ user }: { user: User }) {
     <DropdownMenu>
       <DropdownMenuTrigger className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-accent">
         <Avatar className="h-9 w-9">
-          <AvatarFallback>{getInitials(user.email || "U")}</AvatarFallback>
+          <AvatarFallback>{user.email.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <div className="flex items-center gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            <p className="text-sm font-medium">
-              {user.user_metadata?.full_name || "Пользователь"}
-            </p>
             <p className="text-xs text-muted-foreground">{user.email}</p>
           </div>
         </div>
