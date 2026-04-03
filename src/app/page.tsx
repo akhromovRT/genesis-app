@@ -1,8 +1,18 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Dna, Activity, Brain } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { StatsBar } from "@/components/landing/stats-bar";
+import { Benefits } from "@/components/landing/benefits";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { PopularTests } from "@/components/landing/popular-tests";
+import { Personas } from "@/components/landing/personas";
+import { FAQ } from "@/components/landing/faq";
+import { FinalCTA } from "@/components/landing/final-cta";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
@@ -10,80 +20,43 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         {/* Hero */}
-        <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <section className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Ты — это твои данные.
+              Узнай свою генетику.
               <br />
-              <span className="text-primary/80">Мы помогаем их читать.</span>
+              <span className="text-primary">Управляй здоровьем.</span>
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground">
-              Genesis — персональная система здоровья и долголетия. Генетические
-              тесты, биомаркеры и AI-протоколы для осознанного управления своим
-              здоровьем.
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+              Genesis — генетические тесты с понятной расшифровкой и персональными
+              рекомендациями. Более 80 исследований от 1 300 ₽.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-4">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/catalog">
-                <Button size="lg">
-                  Каталог тестов
+                <Button size="lg" className="text-base">
+                  Выбрать тест
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/about">
-                <Button variant="outline" size="lg">
-                  Узнать больше
+              <a href="#how-it-works">
+                <Button variant="outline" size="lg" className="text-base">
+                  Как это работает
+                  <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </section>
 
-        {/* Features */}
-        <section className="border-t bg-muted/40 py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-center text-3xl font-bold tracking-tight">
-              Как это работает
-            </h2>
-            <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3">
-              <div className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-                  <Dna className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="mt-6 text-lg font-semibold">
-                  1. Выберите тест
-                </h3>
-                <p className="mt-2 text-muted-foreground">
-                  Более 80 генетических тестов: от спортивной генетики до
-                  фармакогенетики и онкорисков.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-                  <Activity className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="mt-6 text-lg font-semibold">
-                  2. Сдайте биоматериал
-                </h3>
-                <p className="mt-2 text-muted-foreground">
-                  Простой забор в лаборатории или на дому. Результат через 14
-                  рабочих дней.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-                  <Brain className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="mt-6 text-lg font-semibold">
-                  3. Получите результат
-                </h3>
-                <p className="mt-2 text-muted-foreground">
-                  Детальный отчёт с расшифровкой генов, рисков и персональными
-                  рекомендациями.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <StatsBar />
+        <Benefits />
+        <HowItWorks />
+        <Suspense fallback={<div className="py-20" />}>
+          <PopularTests />
+        </Suspense>
+        <Personas />
+        <FAQ />
+        <FinalCTA />
       </main>
       <Footer />
     </div>
