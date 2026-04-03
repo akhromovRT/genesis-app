@@ -25,6 +25,8 @@ const schema = z.object({
   wbc: z.coerce.number().positive("Введите значение"),
 });
 
+type FormValues = z.infer<typeof schema>;
+
 export function CalculatorForm() {
   const [result, setResult] = useState<PhenoAgeResult | null>(null);
 
@@ -32,12 +34,12 @@ export function CalculatorForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<BiomarkerInput>({
+  } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
-  function onSubmit(data: BiomarkerInput) {
-    const res = calculatePhenoAge(data);
+  function onSubmit(data: FormValues) {
+    const res = calculatePhenoAge(data as BiomarkerInput);
     setResult(res);
     setTimeout(() => {
       document.getElementById("result")?.scrollIntoView({ behavior: "smooth" });
