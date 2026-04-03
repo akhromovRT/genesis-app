@@ -43,9 +43,9 @@ export function FAQ() {
         <h2 className="text-center text-3xl font-bold tracking-tight">
           Частые вопросы
         </h2>
-        <Accordion type="single" collapsible className="mt-10">
+        <Accordion className="mt-10">
           {questions.map((item, i) => (
-            <AccordionItem key={i} value={`q-${i}`}>
+            <AccordionItem key={i} value={i}>
               <AccordionTrigger className="text-left text-base">
                 {item.q}
               </AccordionTrigger>
