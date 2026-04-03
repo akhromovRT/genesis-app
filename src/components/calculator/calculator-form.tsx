@@ -13,19 +13,17 @@ import { MARKERS, calculatePhenoAge, type BiomarkerInput, type PhenoAgeResult } 
 import { CalculatorResult } from "@/components/calculator/calculator-result";
 
 const schema = z.object({
-  age: z.coerce.number().min(18, "Минимум 18 лет").max(120, "Максимум 120 лет"),
-  albumin: z.coerce.number().positive("Введите значение"),
-  creatinine: z.coerce.number().positive("Введите значение"),
-  glucose: z.coerce.number().positive("Введите значение"),
-  crp: z.coerce.number().positive("Введите значение"),
-  lymphocyte: z.coerce.number().positive("Введите значение"),
-  mcv: z.coerce.number().positive("Введите значение"),
-  rdw: z.coerce.number().positive("Введите значение"),
-  alp: z.coerce.number().positive("Введите значение"),
-  wbc: z.coerce.number().positive("Введите значение"),
+  age: z.number({ invalid_type_error: "Введите возраст" }).min(18, "Минимум 18 лет").max(120, "Максимум 120 лет"),
+  albumin: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  creatinine: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  glucose: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  crp: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  lymphocyte: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  mcv: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  rdw: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  alp: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
+  wbc: z.number({ invalid_type_error: "Введите значение" }).positive("Введите значение"),
 });
-
-type FormValues = z.infer<typeof schema>;
 
 export function CalculatorForm() {
   const [result, setResult] = useState<PhenoAgeResult | null>(null);
@@ -34,12 +32,12 @@ export function CalculatorForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<BiomarkerInput>({
     resolver: zodResolver(schema),
   });
 
-  function onSubmit(data: FormValues) {
-    const res = calculatePhenoAge(data as BiomarkerInput);
+  function onSubmit(data: BiomarkerInput) {
+    const res = calculatePhenoAge(data);
     setResult(res);
     setTimeout(() => {
       document.getElementById("result")?.scrollIntoView({ behavior: "smooth" });
@@ -64,7 +62,7 @@ export function CalculatorForm() {
                 id="age"
                 type="number"
                 placeholder="35"
-                {...register("age")}
+                {...register("age", { valueAsNumber: true })}
               />
               {errors.age && (
                 <p className="text-sm text-destructive">{errors.age.message}</p>
@@ -86,7 +84,7 @@ export function CalculatorForm() {
                     type="number"
                     step="any"
                     placeholder={marker.placeholder}
-                    {...register(marker.key)}
+                    {...register(marker.key, { valueAsNumber: true })}
                   />
                   <p className="text-xs text-muted-foreground">
                     Оптимум: {marker.optimalMin}–{marker.optimalMax} {marker.unit}
