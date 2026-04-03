@@ -10,6 +10,7 @@ export const siteConfig = {
   navigation: {
     main: [
       { title: "Каталог тестов", href: "/catalog" },
+      { title: "Калькулятор", href: "/calculator" },
       { title: "О нас", href: "/about" },
       { title: "Контакты", href: "/contacts" },
     ],
