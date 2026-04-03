@@ -5,9 +5,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   ogImage: "/og.png",
   links: {
-    telegram: "https://t.me/genesis_health",
-    email: "info@genesis-health.ru",
-    phone: "+7 (800) 000-00-00",
+    email: "hello@genesisbio.ru",
   },
   navigation: {
     main: [
