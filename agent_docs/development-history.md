@@ -9,6 +9,32 @@
 
 ## Записи
 
+### 2026-04-05 — DNA Parser MVP (CERBALAB PDF)
+
+- **Что сделано:** Парсер PDF-отчётов CERBALAB (NGS таргетное секвенирование), извлечение 223 маркеров + метаданных пациента.
+- **Компоненты:**
+  - `src/lib/dna/cerbalab-parser.ts` — pdf-parse-fork + sequential position matching (устойчив к шуму в тексте)
+  - Таблицы `dna_reports`, `dna_markers` в Drizzle schema
+  - 5 API routes: upload, list, detail, delete, file streaming
+  - UI в дашборде: загрузка, карточки, поиск по маркерам, поиск по тексту, удаление
+  - Админ-вид `/admin/dna` — все отчёты всех пользователей
+- **Покрытие:** 223/223 маркера (100%) для CERBALAB формата. Edge cases: HLA без rs, del, wt/wt, 21/21, 6TA/7TA, NA.
+- **Решение:** структурированно парсим только главную таблицу маркеров, полный текст интерпретаций сохраняем как есть + даём клиентский поиск. Парсинг nested-таблиц интерпретаций — в v2.
+
+### 2026-04-03 — Лендинг, SEO, PhenoAge Calculator
+
+- **Лендинг:** 8 секций (hero, stats, benefits, how-it-works, popular tests, personas, FAQ, CTA). Emerald wellness-тема. Страницы "О нас" и "Контакты".
+- **SEO:** динамический sitemap.xml (73 теста + 14 категорий), robots.txt, Open Graph мета-теги.
+- **PhenoAge Calculator:** публичный калькулятор биовозраста (Levine et al. 2018) по 9 биомаркерам крови. Визуальная шкала, оценка маркеров, рекомендации, Details for nerds. `/calculator`.
+
+### 2026-04-03 — Миграция Supabase → Self-hosted PostgreSQL
+
+- **Причина:** устранить зависимость от внешнего сервиса, использовать существующий PostgreSQL на VPS.
+- **Что заменено:** Supabase Auth → custom JWT (jose + bcryptjs + HttpOnly cookies). Supabase DB → Drizzle ORM + postgres. Supabase Storage → локальный Docker volume.
+- **Архитектура:** новая БД `genesis` в существующем `pass24-postgres` контейнере. Middleware проверяет JWT, передаёт user-info в headers для server components. RLS заменён app-level проверками в API и pages.
+- **Деплой:** Docker → GitHub Actions → GHCR → VPS 5.42.101.27 → Nginx Proxy Manager → Let's Encrypt SSL. genesisbio.ru HTTP 200.
+- **Scope:** 30+ файлов переписано (все API routes, pages, auth forms, middleware, header, user-nav).
+
 ### 2026-03-23 — Создана база знаний: книга «Биохакинг по-женски» (Хусаинова)
 
 - **Источник:** Хусаинова Г. «Биохакинг по-женски. Как запустить программу снижения биологического возраста» (EPUB).
