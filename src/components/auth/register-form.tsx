@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,8 @@ import {
 
 export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sessionToken = searchParams.get("sessionToken");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -33,7 +35,10 @@ export function RegisterForm() {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, fullName, phone }),
+      body: JSON.stringify({
+        email, password, fullName, phone,
+        ...(sessionToken ? { sessionToken } : {}),
+      }),
     });
 
     if (!res.ok) {
@@ -43,7 +48,7 @@ export function RegisterForm() {
       return;
     }
 
-    router.push("/dashboard/orders");
+    router.push(sessionToken ? "/dashboard/questionnaire" : "/dashboard/orders");
     router.refresh();
   }
 
