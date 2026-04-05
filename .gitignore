@@ -39,3 +39,4 @@ next-env.d.ts
 # plugins/temp
 .superpowers/
 .playwright-mcp/
+_samples/
