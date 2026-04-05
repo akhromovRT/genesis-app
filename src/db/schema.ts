@@ -7,6 +7,7 @@ import {
   timestamp,
   uniqueIndex,
   index,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -172,4 +173,23 @@ export const dnaMarkers = pgTable("dna_markers", {
   index("idx_dna_markers_report_id").on(table.reportId),
   index("idx_dna_markers_gene").on(table.gene),
   index("idx_dna_markers_rsid").on(table.rsid),
+]);
+
+// ── Questionnaire Sessions ────────────────────────────────────
+export const questionnaireSessions = pgTable("questionnaire_sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => profiles.id, { onDelete: "cascade" }),
+  sessionToken: text("session_token").notNull().unique(),
+  status: text("status").notNull().default("draft"),
+  currentStep: integer("current_step").notNull().default(0),
+  answers: jsonb("answers").notNull().default({}),
+  highlights: jsonb("highlights"),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  email: text("email"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+}, (table) => [
+  index("idx_questionnaire_sessions_user_id").on(table.userId),
+  index("idx_questionnaire_sessions_token").on(table.sessionToken),
+  index("idx_questionnaire_sessions_status").on(table.status),
 ]);
