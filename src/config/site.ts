@@ -17,6 +17,7 @@ export const siteConfig = {
     dashboard: [
       { title: "Мои заказы", href: "/dashboard/orders" },
       { title: "Результаты", href: "/dashboard/results" },
+      { title: "ДНК", href: "/dashboard/dna" },
       { title: "Профиль", href: "/dashboard/profile" },
     ],
     admin: [
@@ -25,6 +26,7 @@ export const siteConfig = {
       { title: "Каталог", href: "/admin/catalog" },
       { title: "Категории", href: "/admin/categories" },
       { title: "Результаты", href: "/admin/results" },
+      { title: "ДНК-отчёты", href: "/admin/dna" },
       { title: "Пользователи", href: "/admin/users" },
     ],
   },
