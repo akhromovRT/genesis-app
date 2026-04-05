@@ -137,3 +137,39 @@ export const cartItems = pgTable("cart_items", {
   uniqueIndex("cart_items_user_test_unique").on(table.userId, table.testId),
   index("idx_cart_items_user_id").on(table.userId),
 ]);
+
+// ── DNA Reports ───────────────────────────────────────────────
+export const dnaReports = pgTable("dna_reports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => profiles.id, { onDelete: "cascade" }),
+  lab: text("lab").notNull().default("cerbalab"),
+  patientName: text("patient_name").notNull(),
+  birthDate: text("birth_date"),
+  sex: text("sex"),
+  sampleType: text("sample_type"),
+  sampleNumber: text("sample_number"),
+  sampleDate: text("sample_date"),
+  resultDate: text("result_date"),
+  filePath: text("file_path").notNull(),
+  fileName: text("file_name").notNull(),
+  fileSize: integer("file_size"),
+  fullText: text("full_text"),
+  markersCount: integer("markers_count").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+}, (table) => [
+  index("idx_dna_reports_user_id").on(table.userId),
+]);
+
+// ── DNA Markers ───────────────────────────────────────────────
+export const dnaMarkers = pgTable("dna_markers", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  reportId: uuid("report_id").notNull().references(() => dnaReports.id, { onDelete: "cascade" }),
+  position: integer("position").notNull(),
+  gene: text("gene").notNull(),
+  rsid: text("rsid").notNull().default(""),
+  genotype: text("genotype").notNull(),
+}, (table) => [
+  index("idx_dna_markers_report_id").on(table.reportId),
+  index("idx_dna_markers_gene").on(table.gene),
+  index("idx_dna_markers_rsid").on(table.rsid),
+]);
