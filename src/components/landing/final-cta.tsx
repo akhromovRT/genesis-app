@@ -12,12 +12,20 @@ export function FinalCTA() {
         <p className="mt-4 text-lg text-muted-foreground">
           Выберите тест и сделайте первый шаг к осознанному управлению здоровьем.
         </p>
-        <Link href="/catalog" className="mt-8 inline-block">
-          <Button size="lg">
-            Перейти в каталог
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Link href="/catalog">
+            <Button size="lg">
+              Перейти в каталог
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+          <Link href="/questionnaire">
+            <Button variant="outline" size="lg">
+              Пройти бесплатную анкету
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
         <p className="mt-4 text-sm text-muted-foreground">
           Результат через 14–30 рабочих дней. Тест сдаётся один раз.
         </p>

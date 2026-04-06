@@ -10,6 +10,7 @@ export const siteConfig = {
   navigation: {
     main: [
       { title: "Каталог тестов", href: "/catalog" },
+      { title: "Анкета", href: "/questionnaire" },
       { title: "Калькулятор", href: "/calculator" },
       { title: "О нас", href: "/about" },
       { title: "Контакты", href: "/contacts" },
@@ -17,6 +18,7 @@ export const siteConfig = {
     dashboard: [
       { title: "Мои заказы", href: "/dashboard/orders" },
       { title: "Результаты", href: "/dashboard/results" },
+      { title: "Моя анкета", href: "/dashboard/questionnaire" },
       { title: "ДНК", href: "/dashboard/dna" },
       { title: "Профиль", href: "/dashboard/profile" },
     ],

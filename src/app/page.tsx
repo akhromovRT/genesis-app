@@ -38,12 +38,12 @@ export default function Home() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <a href="#how-it-works">
+              <Link href="/questionnaire">
                 <Button variant="outline" size="lg" className="text-base">
-                  Как это работает
-                  <ChevronDown className="ml-2 h-4 w-4" />
+                  Пройти анкету
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </a>
+              </Link>
             </div>
           </div>
         </section>
