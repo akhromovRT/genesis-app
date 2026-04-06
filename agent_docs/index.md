@@ -28,6 +28,11 @@
 - `knowledge_base/books/biohacking-po-zhenski-bioage-tests.md` — 15 тестов биологического возраста + формулы КоэфСС.
 - `knowledge_base/books/biohacking-po-zhenski-longevity-pincode.md` — ПИН-код долголетия, системный подход.
 
+## Спецификации и планы
+- `docs/superpowers/specs/2026-04-05-questionnaire-module-design.md` — спецификация модуля анкетирования.
+- `docs/superpowers/plans/2026-04-05-questionnaire-module.md` — план реализации (29 задач).
+- `agent_docs/questionnaire-partner-brief.md` — бриф для партнёра: что сделано, как работает, дальнейшие шаги.
+
 ## Шаблоны
 - `agent_docs/templates/architecture.md`
 - `agent_docs/templates/adr.md`
