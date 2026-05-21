@@ -6,7 +6,7 @@ import { Clock, FileCheck, Lightbulb } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Биохакинг-анкета — персональный анамнез | Genesis",
-  description: "Бесплатная биохакинг-анкета: образ жизни, питание, здоровье. 9 шагов, ~25 минут, 15 автоматических подсветок рисков. Без регистрации.",
+  description: "Мгновенный антропометрический срез после 1 экрана + полная биохакинг-анкета на 9 шагов с 15 подсветками рисков. Бесплатно, без регистрации.",
   openGraph: {
     title: "Биохакинг-анкета | Genesis",
     description: "Структурированный анамнез за 25 минут с подсветкой рисков.",
@@ -21,16 +21,18 @@ export default function QuestionnairePage() {
           Биохакинг-анкета
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Расскажите о себе — и получите структурированную карту рисков по образу
-          жизни, питанию и здоровью за 25 минут. Бесплатно, без регистрации.
+          Заполните 1 экран и получите мгновенный антропометрический срез — ИМТ,
+          окружность талии, индекс грации. По желанию — продолжите анкету и
+          узнайте биологический возраст, дефициты нутриентов и подсветки по
+          фарм-нагрузке (~20 минут).
         </p>
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         <Card><CardContent className="p-6 text-center">
           <Clock className="mx-auto h-8 w-8 text-primary" />
-          <p className="mt-3 font-semibold">9 шагов, ~25 минут</p>
-          <p className="mt-1 text-sm text-muted-foreground">С автосохранением</p>
+          <p className="mt-3 font-semibold">Мгновенный результат</p>
+          <p className="mt-1 text-sm text-muted-foreground">Уже после 1 экрана</p>
         </CardContent></Card>
         <Card><CardContent className="p-6 text-center">
           <Lightbulb className="mx-auto h-8 w-8 text-primary" />
