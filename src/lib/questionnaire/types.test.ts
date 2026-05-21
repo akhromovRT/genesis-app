@@ -39,6 +39,51 @@ describe("Step1Schema (personal)", () => {
     };
     expect(() => Step1Schema.parse(input)).not.toThrow();
   });
+
+  it("treats NaN waist/hips/calf as undefined", () => {
+    const parsed = Step1Schema.parse({
+      gender: "m" as const,
+      birthDate: "1985-06-15",
+      city: "Москва",
+      timezone: "Europe/Moscow",
+      height: 180,
+      weight: 80,
+      waist: NaN,
+      hips: NaN,
+      calf: NaN,
+    });
+    expect(parsed.waist).toBeUndefined();
+    expect(parsed.hips).toBeUndefined();
+    expect(parsed.calf).toBeUndefined();
+  });
+
+  it("accepts calf without hips (independently optional)", () => {
+    expect(() =>
+      Step1Schema.parse({
+        gender: "m" as const,
+        birthDate: "1985-06-15",
+        city: "Москва",
+        timezone: "Europe/Moscow",
+        height: 180,
+        weight: 80,
+        calf: 38,
+      }),
+    ).not.toThrow();
+  });
+
+  it("still rejects calf out of range", () => {
+    expect(() =>
+      Step1Schema.parse({
+        gender: "m" as const,
+        birthDate: "1985-06-15",
+        city: "Москва",
+        timezone: "Europe/Moscow",
+        height: 180,
+        weight: 80,
+        calf: 5,
+      }),
+    ).toThrow();
+  });
 });
 
 describe("FrequencyEnum", () => {

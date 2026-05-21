@@ -12,6 +12,18 @@ export const PhysicalActivityEnum = z.enum(["low", "medium", "high"]);
 export const WaterIntakeEnum = z.enum(["<0.5", "0.5-1", "1-1.5", ">1.5", "2+"]);
 export const ReadinessEnum = z.enum(["full", "partial", "unsure"]);
 
+// react-hook-form with valueAsNumber:true emits NaN for empty inputs; Zod's
+// .optional() only treats undefined as absent (and z.number() rejects NaN).
+// Accept NaN as a sentinel for "blank" and coerce it to undefined so that
+// blank optional measurements don't propagate into UI as "NaN см".
+const optionalNumberInRange = (min: number, max: number) =>
+  z
+    .union([z.nan(), z.number().min(min).max(max)])
+    .transform((v): number | undefined =>
+      typeof v === "number" && Number.isNaN(v) ? undefined : v,
+    )
+    .optional();
+
 // ── Step 1: Personal ──────────────────────────────────────────
 
 export const Step1Schema = z.object({
@@ -21,9 +33,9 @@ export const Step1Schema = z.object({
   timezone: z.string().min(1, "Укажите часовой пояс"),
   height: z.number().min(100, "Мин. 100").max(250, "Макс. 250"),
   weight: z.number().min(30, "Мин. 30").max(300, "Макс. 300"),
-  waist: z.number().min(40).max(200).optional(),
-  hips: z.number().min(40).max(200).optional(),
-  calf: z.number().min(20).max(80).optional(),
+  waist: optionalNumberInRange(40, 200),
+  hips: optionalNumberInRange(40, 200),
+  calf: optionalNumberInRange(20, 80),
 });
 export type Step1Answers = z.infer<typeof Step1Schema>;
 
