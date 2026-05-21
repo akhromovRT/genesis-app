@@ -121,7 +121,7 @@ export function QuestionnaireWizard() {
 
   return (
     <div>
-      {currentStep > 0 && <QuestionnaireProgressBar currentStep={currentStep} />}
+      {currentStep > 0 && !showingInsights && <QuestionnaireProgressBar currentStep={currentStep} />}
       <div className="mx-auto max-w-3xl px-4 py-8">
         {currentStep > 0 && !showingInsights && (
           <div className="mb-4 flex justify-between text-sm">
@@ -142,6 +142,7 @@ export function QuestionnaireWizard() {
           </div>
         )}
 
+        {/* showingInsights is intentionally NOT persisted to LocalStorage: on reload users return to step 1 with answers intact. */}
         {showingInsights && answers.step1 ? (
           <StepQuickInsights
             step1={answers.step1}
