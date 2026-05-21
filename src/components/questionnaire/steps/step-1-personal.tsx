@@ -73,7 +73,7 @@ export function Step1Personal({ value, onChange, onNext, onBack }: StepProps<Ste
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="height">Рост (см)</Label>
               <Input id="height" type="number" {...register("height", { valueAsNumber: true })} />
@@ -92,7 +92,16 @@ export function Step1Personal({ value, onChange, onNext, onBack }: StepProps<Ste
               <Label htmlFor="hips">Бёдра (см)</Label>
               <Input id="hips" type="number" {...register("hips", { valueAsNumber: true })} />
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="calf">Голень (см)</Label>
+              <Input id="calf" type="number" {...register("calf", { valueAsNumber: true })} />
+            </div>
           </div>
+
+          <p className="text-xs text-muted-foreground">
+            Талия, бёдра и голень нужны для мгновенного предварительного результата
+            на следующем экране. Можно оставить пустыми — тогда покажем только ИМТ.
+          </p>
 
           <div className="flex justify-between gap-3 pt-4">
             <Button type="button" variant="outline" onClick={onBack}>Назад</Button>
