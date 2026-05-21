@@ -17,6 +17,7 @@ import { Step5StressAllergies } from "./steps/step-5-stress-allergies";
 import { Step6Medications } from "./steps/step-6-medications";
 import { Step7Nutrition } from "./steps/step-7-nutrition";
 import { Step8SymptomsGoals } from "./steps/step-8-symptoms-goals";
+import { StepQuickInsights } from "./steps/step-quick-insights";
 
 export interface StepProps<T> {
   value: T | undefined;
@@ -30,6 +31,7 @@ export function QuestionnaireWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<FullAnswers>({});
   const [loaded, setLoaded] = useState(false);
+  const [showingInsights, setShowingInsights] = useState(false);
 
   useEffect(() => {
     const saved = loadSession();
@@ -50,6 +52,11 @@ export function QuestionnaireWizard() {
   }
 
   function goNext() {
+    if (currentStep === 1 && answers.step1 && !showingInsights) {
+      setShowingInsights(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     if (currentStep < TOTAL_STEPS - 1) {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -57,10 +64,21 @@ export function QuestionnaireWizard() {
   }
 
   function goBack() {
+    if (showingInsights) {
+      setShowingInsights(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+  }
+
+  function continueFromInsights() {
+    setShowingInsights(false);
+    setCurrentStep(2);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function submitFinal() {
@@ -105,25 +123,44 @@ export function QuestionnaireWizard() {
     <div>
       {currentStep > 0 && <QuestionnaireProgressBar currentStep={currentStep} />}
       <div className="mx-auto max-w-3xl px-4 py-8">
-        {currentStep > 0 && (
+        {currentStep > 0 && !showingInsights && (
           <div className="mb-4 flex justify-between text-sm">
-            <button type="button" onClick={startOver} className="text-muted-foreground hover:text-foreground underline">
+            <button
+              type="button"
+              onClick={startOver}
+              className="text-muted-foreground hover:text-foreground underline"
+            >
               Начать заново
             </button>
-            <button type="button" onClick={saveAndExit} className="text-muted-foreground hover:text-foreground underline">
+            <button
+              type="button"
+              onClick={saveAndExit}
+              className="text-muted-foreground hover:text-foreground underline"
+            >
               Сохранить и выйти
             </button>
           </div>
         )}
-        {currentStep === 0 && <Step0Intro onNext={goNext} />}
-        {currentStep === 1 && <Step1Personal value={answers.step1} onChange={(v) => updateStep("step1", v)} onNext={goNext} onBack={goBack} />}
-        {currentStep === 2 && <Step2Lifestyle value={answers.step2} onChange={(v) => updateStep("step2", v)} onNext={goNext} onBack={goBack} />}
-        {currentStep === 3 && <Step3History value={answers.step3} onChange={(v) => updateStep("step3", v)} onNext={goNext} onBack={goBack} />}
-        {currentStep === 4 && <Step4Systems value={answers.step4} onChange={(v) => updateStep("step4", v)} onNext={goNext} onBack={goBack} />}
-        {currentStep === 5 && <Step5StressAllergies value={answers.step5} onChange={(v) => updateStep("step5", v)} onNext={goNext} onBack={goBack} />}
-        {currentStep === 6 && <Step6Medications value={answers.step6} onChange={(v) => updateStep("step6", v)} onNext={goNext} onBack={goBack} />}
-        {currentStep === 7 && <Step7Nutrition value={answers.step7} onChange={(v) => updateStep("step7", v)} onNext={goNext} onBack={goBack} />}
-        {currentStep === 8 && <Step8SymptomsGoals value={answers.step8} onChange={(v) => updateStep("step8", v)} onNext={submitFinal} onBack={goBack} />}
+
+        {showingInsights && answers.step1 ? (
+          <StepQuickInsights
+            step1={answers.step1}
+            onContinue={continueFromInsights}
+            onBack={goBack}
+          />
+        ) : (
+          <>
+            {currentStep === 0 && <Step0Intro onNext={goNext} />}
+            {currentStep === 1 && <Step1Personal value={answers.step1} onChange={(v) => updateStep("step1", v)} onNext={goNext} onBack={goBack} />}
+            {currentStep === 2 && <Step2Lifestyle value={answers.step2} onChange={(v) => updateStep("step2", v)} onNext={goNext} onBack={goBack} />}
+            {currentStep === 3 && <Step3History value={answers.step3} onChange={(v) => updateStep("step3", v)} onNext={goNext} onBack={goBack} />}
+            {currentStep === 4 && <Step4Systems value={answers.step4} onChange={(v) => updateStep("step4", v)} onNext={goNext} onBack={goBack} />}
+            {currentStep === 5 && <Step5StressAllergies value={answers.step5} onChange={(v) => updateStep("step5", v)} onNext={goNext} onBack={goBack} />}
+            {currentStep === 6 && <Step6Medications value={answers.step6} onChange={(v) => updateStep("step6", v)} onNext={goNext} onBack={goBack} />}
+            {currentStep === 7 && <Step7Nutrition value={answers.step7} onChange={(v) => updateStep("step7", v)} onNext={goNext} onBack={goBack} />}
+            {currentStep === 8 && <Step8SymptomsGoals value={answers.step8} onChange={(v) => updateStep("step8", v)} onNext={submitFinal} onBack={goBack} />}
+          </>
+        )}
       </div>
     </div>
   );
