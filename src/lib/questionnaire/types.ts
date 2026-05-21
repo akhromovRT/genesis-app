@@ -23,6 +23,7 @@ export const Step1Schema = z.object({
   weight: z.number().min(30, "Мин. 30").max(300, "Макс. 300"),
   waist: z.number().min(40).max(200).optional(),
   hips: z.number().min(40).max(200).optional(),
+  calf: z.number().min(20).max(80).optional(),
 });
 export type Step1Answers = z.infer<typeof Step1Schema>;
 
