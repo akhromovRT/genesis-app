@@ -28,6 +28,11 @@
 - `knowledge_base/books/biohacking-po-zhenski-bioage-tests.md` — 15 тестов биологического возраста + формулы КоэфСС.
 - `knowledge_base/books/biohacking-po-zhenski-longevity-pincode.md` — ПИН-код долголетия, системный подход.
 
+## Инвестиционные материалы
+- `genesis-investor-pitch/` — Slidev-проект pitch deck (slides.md, CSS, компоненты).
+- `genesis-investor-pitch/Genesis-Investor-Pitch-2026.pdf` — финальный PDF для рассылки инвесторам.
+- `outline-genesis-investor-pitch.md` — утверждённый outline презентации (14 слайдов).
+
 ## Спецификации и планы
 - `docs/superpowers/specs/2026-04-05-questionnaire-module-design.md` — спецификация модуля анкетирования.
 - `docs/superpowers/plans/2026-04-05-questionnaire-module.md` — план реализации (29 задач).

@@ -2,6 +2,10 @@
 
 Приоритизированный список задач. Обновлять при изменении приоритетов.
 
+## Сделано (май 2026)
+
+- [x] **Инвестиционная презентация:** Slidev pitch deck 14 слайдов (`genesis-investor-pitch/`), PDF для рассылки (`Genesis-Investor-Pitch-2026.pdf`), outline в `outline-genesis-investor-pitch.md`.
+
 ## Сделано (апрель 2026)
 
 - [x] E-commerce MVP: каталог 73 тестов, корзина, checkout, личный кабинет, админка

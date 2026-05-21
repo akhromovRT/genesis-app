@@ -9,6 +9,15 @@
 
 ## Записи
 
+### 2026-05-05 — Инвестиционная презентация (Slidev pitch deck)
+
+- **Что сделано:** Разработан детальный инвест-мемо и Slidev pitch deck для pre-seed раунда 35M ₽ за 10% equity.
+- **Документы:** `genesis-investor-pitch/` — полный Slidev-проект (slides.md, styles/index.css, components/Icon.vue). `outline-genesis-investor-pitch.md` — одобренный outline (14 слайдов).
+- **Артефакты:** `genesis-investor-pitch/Genesis-Investor-Pitch-2026.pdf` (2.7 МБ, pixel-perfect PNG→PDF).
+- **Структура:** Cover → Проблема → Рынок ($211B) → Платформа → Конкуренты → MVP → Монетизация → Окупаемость (M12 break-even) → Roadmap → Сделка → Exit сценарии (×3–14) → Команда → Почему сейчас → CTA.
+- **Дизайн:** dark premium тема, emerald (#00C48C) акценты, Plus Jakarta Sans + DM Sans, metric-карточки, таблица конкурентов.
+- **Финансовые параметры:** pre-money 315M ₽, post-money 350M ₽, runway 18+ мес, break-even M12 MRR 5.8M ₽, ARR run rate M18 180M ₽. Cap table: Алексей 35% · Галина 35% · Инвестор 10% · Пул 20%.
+
 ### 2026-04-05 — Добавлен модуль биохакинг-анкеты
 
 - **Источник:** две анкеты в docx (часть 1 — образ жизни/лекарства, часть 2 — питание/нутриенты).
