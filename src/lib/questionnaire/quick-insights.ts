@@ -72,6 +72,7 @@ export function calculateBMI(weightKg: number, heightCm: number): BMIResult {
   const h = heightCm / 100;
   const value = Number((weightKg / (h * h)).toFixed(1));
   let category: BMICategory;
+  // WHO BMI cutoffs: <18.5 underweight; 18.5–24.9 normal; 25–29.9 overweight; 30–34.9 obese I; 35–39.9 obese II; >=40 obese III
   if (value < 18.5) category = "underweight";
   else if (value < 25) category = "normal";
   else if (value < 30) category = "overweight";
@@ -89,6 +90,7 @@ export function calculateWHR(
   if (waist == null || hips == null) return null;
   const value = Number((waist / hips).toFixed(2));
   let category: RiskCategory = "low";
+  // WHO/IDF thresholds: men >=0.90 moderate, >=1.0 high; women >=0.80 moderate, >=0.85 high
   if (gender === "m") {
     if (value >= 1.0) category = "high";
     else if (value >= 0.9) category = "moderate";
@@ -108,6 +110,7 @@ export function calculateWaistRisk(
 ): RiskResult | null {
   if (waist == null) return null;
   let category: RiskCategory = "low";
+  // WHO/IDF thresholds: men >=94 cm moderate, >=102 cm high; women >=80 cm moderate, >=88 cm high
   if (gender === "m") {
     if (waist >= 102) category = "high";
     else if (waist >= 94) category = "moderate";

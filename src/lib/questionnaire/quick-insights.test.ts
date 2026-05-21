@@ -111,6 +111,12 @@ describe("calculateIndexOfGrace", () => {
   it("flags 'dense' when >38", () => {
     expect(calculateIndexOfGrace(42, 95)?.category).toBe("dense");
   });
+  it("flags 'harmonious' at exactly 38 (inclusive upper bound)", () => {
+    expect(calculateIndexOfGrace(38, 100)?.category).toBe("harmonious");
+  });
+  it("flags 'dense' just above 38", () => {
+    expect(calculateIndexOfGrace(38.1, 100)?.category).toBe("dense");
+  });
 });
 
 describe("computeQuickInsights", () => {
