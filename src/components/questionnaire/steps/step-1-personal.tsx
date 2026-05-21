@@ -87,14 +87,17 @@ export function Step1Personal({ value, onChange, onNext, onBack }: StepProps<Ste
             <div className="space-y-1.5">
               <Label htmlFor="waist">Талия (см)</Label>
               <Input id="waist" type="number" {...register("waist", { valueAsNumber: true })} />
+              {errors.waist && <p className="text-xs text-destructive">{errors.waist.message}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="hips">Бёдра (см)</Label>
               <Input id="hips" type="number" {...register("hips", { valueAsNumber: true })} />
+              {errors.hips && <p className="text-xs text-destructive">{errors.hips.message}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="calf">Голень (см)</Label>
               <Input id="calf" type="number" {...register("calf", { valueAsNumber: true })} />
+              {errors.calf && <p className="text-xs text-destructive">{errors.calf.message}</p>}
             </div>
           </div>
 
