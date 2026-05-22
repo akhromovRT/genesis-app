@@ -33,6 +33,10 @@
 - `genesis-investor-pitch/Genesis-Investor-Pitch-2026.pdf` — финальный PDF для рассылки инвесторам.
 - `outline-genesis-investor-pitch.md` — утверждённый outline презентации (14 слайдов).
 
+## Продукт: генетические блоки и тарифы
+- `agent_docs/platform-functions-catalog.md` — атомарный каталог ~202 функций для проектирования тарифов.
+- `agent_docs/genetics-blocks/nutrition-block-v1.md` — базовый ген-блок «Питание, стройность, восстановление» (50 точек) + квиз «генетический чекап питания» от Галины 2026-05-21.
+
 ## Спецификации и планы
 - `docs/superpowers/specs/2026-04-05-questionnaire-module-design.md` — спецификация модуля анкетирования.
 - `docs/superpowers/plans/2026-04-05-questionnaire-module.md` — план реализации (29 задач).
