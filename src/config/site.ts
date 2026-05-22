@@ -11,6 +11,7 @@ export const siteConfig = {
     main: [
       { title: "Каталог тестов", href: "/catalog" },
       { title: "Анкета", href: "/questionnaire" },
+      { title: "Генетический чекап", href: "/genetic-quiz" },
       { title: "Калькулятор", href: "/calculator" },
       { title: "О нас", href: "/about" },
       { title: "Контакты", href: "/contacts" },
