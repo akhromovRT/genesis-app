@@ -193,3 +193,22 @@ export const questionnaireSessions = pgTable("questionnaire_sessions", {
   index("idx_questionnaire_sessions_token").on(table.sessionToken),
   index("idx_questionnaire_sessions_status").on(table.status),
 ]);
+
+// ── Early Access Leads ────────────────────────────────────────
+export const earlyAccessLeads = pgTable("early_access_leads", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull().default(""),
+  mainPain: text("main_pain").notNull().default(""),
+  source: text("source").notNull().default("roundtable"),
+  utm: jsonb("utm").default({}),
+  status: text("status").notNull().default("new"),
+  notes: text("notes").default(""),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+}, (table) => [
+  index("idx_early_access_leads_email").on(table.email),
+  index("idx_early_access_leads_status").on(table.status),
+  index("idx_early_access_leads_created_at").on(table.createdAt),
+]);
+
