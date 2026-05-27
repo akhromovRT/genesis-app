@@ -67,7 +67,7 @@ export function EarlyAccessForm() {
         >
           Спасибо, {form.name.split(" ")[0]}.{" "}
           <em style={{ color: "#1F6B4A", fontStyle: "italic" }}>
-            Цена 49 000 ₽ зафиксирована за вами.
+            Цена 27 900 ₽ за wellness-трио зафиксирована за вами.
           </em>
         </h3>
         <p className="text-stone-700 leading-relaxed">
@@ -159,7 +159,7 @@ export function EarlyAccessForm() {
           className="w-full md:w-auto text-base"
           style={{ background: "#1F6B4A" }}
         >
-          {disabled ? "Отправляем…" : "Зафиксировать цену 49 000 ₽"}
+          {disabled ? "Отправляем…" : "Зафиксировать цену 27 900 ₽"}
         </Button>
         <p className="text-xs text-stone-500 mt-3">
           Отправляя заявку, вы соглашаетесь на обработку контактных данных в

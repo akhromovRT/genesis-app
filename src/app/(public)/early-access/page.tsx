@@ -22,30 +22,30 @@ const blocks = [
   },
   {
     num: "03",
-    title: "Кожа и волосы",
-    desc: "Морщины, пигментация, акне. Какие процедуры будут работать, а какие — нет.",
+    title: "Beauty Safety",
+    desc: "Кожа, морщины, пигментация. Какие косметологические процедуры будут работать, а какие — нет.",
     price: "15 900 ₽",
   },
   {
     num: "04",
-    title: "Гормоны и настроение",
-    desc: "Эстроген, кортизол, дофамин. Циклы, сон, энергия, ясность мысли.",
-    price: "15 900 ₽",
+    title: "Мозг, сон, стресс и мотивация",
+    desc: "Хронотип, регуляция стресса, мотивация и восстановление. На что критично соблюдать режим именно вашему организму.",
+    price: "14 900 ₽",
   },
   {
     num: "05",
     title: "Риски и персональная аптечка",
-    desc: "Сердце, сосуды, онконастороженность. Что держать дома именно вам.",
+    desc: "Сердце, сосуды, онконастороженность. Где выше риск побочных эффектов лекарств. Включает 2 ч консультации с Галиной Хусаиновой.",
     price: "27 300 ₽",
     em: true,
   },
 ];
 
 const promises = [
-  "Полный пакет — все 5 блоков",
-  "Приоритетная очередь на консультацию с Галиной Хусаиновой",
+  "Wellness-трио — три ключевых блока без консультации",
   "Закрытый чат участников Early Access",
   "Действует 7 дней после встречи",
+  "Возможность апгрейда до полного пакета с консультацией",
 ];
 
 export default function EarlyAccessPage() {
@@ -143,7 +143,7 @@ export default function EarlyAccessPage() {
                 >
                   1
                 </span>
-                анализ слюны на всю жизнь
+                генетический анализ
               </div>
             </div>
           </div>
@@ -165,9 +165,10 @@ export default function EarlyAccessPage() {
               +50<sup className="text-base text-stone-400">%</sup>
             </div>
             <p className="mt-4 text-sm text-stone-600 leading-relaxed">
-              достоверность интерпретации vs MyGenetics · Genotech · Atlas.{" "}
-              Конкуренты — на научной базе 10–15 лет. Мы — на исследованиях
-              2022–2024.
+              достоверность интерпретации vs распространённые ДНК-отчёты на рынке.{" "}
+              Большинство — на научной базе 5–10 лет. Genesis опирается на
+              исследования, актуальные на 2025–2026 год. База регулярно
+              обновляется.
             </p>
           </div>
         </div>
@@ -247,11 +248,17 @@ export default function EarlyAccessPage() {
             Только для гостей круглого стола
           </p>
           <h2
-            className="text-5xl md:text-6xl font-light leading-none mb-12"
+            className="text-5xl md:text-6xl font-light leading-none mb-3"
             style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
           >
-            Early Access
+            Wellness-трио
           </h2>
+          <p
+            className="text-stone-100/85 italic text-lg mb-12"
+            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+          >
+            три ключевых блока — питание, тело, beauty
+          </p>
 
           <div className="grid gap-10 md:grid-cols-2 md:gap-16 items-center">
             <div>
@@ -259,10 +266,10 @@ export default function EarlyAccessPage() {
                 className="text-stone-100/50 line-through text-xl mb-1"
                 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
               >
-                65 000 ₽
+                42 900 ₽
               </div>
               <div className="text-stone-100/50 text-xs mb-6">
-                обычная цена полного пакета
+                обычная цена wellness-трио
               </div>
               <div
                 className="text-7xl md:text-8xl font-light leading-none mb-3"
@@ -271,16 +278,16 @@ export default function EarlyAccessPage() {
                   letterSpacing: "-0.04em",
                 }}
               >
-                49 000 <sup className="text-base text-amber-200">₽</sup>
+                27 900 <sup className="text-base text-amber-200">₽</sup>
               </div>
               <p
                 className="text-stone-100/90 italic mb-6"
                 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
               >
-                для первых 50 человек из этого зала
+                для участников этого зала
               </p>
               <div className="inline-block pt-3 border-t border-amber-300/40 text-xs tracking-[0.28em] uppercase text-amber-200">
-                Экономия 16 000 ₽
+                Экономия 15 000 ₽
               </div>
             </div>
 
@@ -320,11 +327,11 @@ export default function EarlyAccessPage() {
           <em style={{ color: "#1F6B4A", fontStyle: "italic" }}>
             и зафиксируйте
           </em>{" "}
-          цену <span style={{ color: "#1F6B4A" }}>49 000 ₽</span>
+          цену <span style={{ color: "#1F6B4A" }}>27 900 ₽</span>
         </h2>
         <p className="text-stone-600 mb-8 leading-relaxed">
-          Мы свяжемся в течение 24 часов и согласуем удобное время для
-          консультации с Галиной.
+          Мы свяжемся в течение 24 часов, расскажем детали и поможем с заказом
+          биоматериала.
         </p>
         <EarlyAccessForm />
       </section>
