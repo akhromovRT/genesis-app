@@ -9,6 +9,25 @@
 
 ## Записи
 
+### 2026-05-28 — Витрина 5 блоков и 3 пакетов «Красивое долголетие» (`/products`)
+
+- **Что сделано:** Сайт перешёл со старого каталога 73 индивидуальных тестов CERBALAB на новую витрину `/products` — 5 модульных блоков ДНК-отчёта «Красивое долголетие» + 3 пакета и видимый якорь «поштучно 89 900 ₽». Каждый блок — отдельная страница с подблоками по болям, sticky pricing card и апсейлом на полный пакет. Полный пакет 65 000 ₽ получил выделенную страницу `/products/full` со сравнительной таблицей пакетов.
+- **Зачем:** Закрывает разрыв между стратегией ADR-002 и кодом. Юнит-экономика (`unit-economics.md`) рассчитывалась на распределение 40 / 40 / 20 — оно работает только при видимом якоре, который теперь есть на витрине.
+- **Архитектурное решение:** расширили таблицу `tests` колонкой `product_type` ('test' | 'block' | 'package') и nullable-полями специфики (pain_headline, subblocks, included_block_slugs, gift_block_slug, consultation_hours, compare_at_price), вместо отдельной таблицы `genetic_blocks`. Корзина и заказы работают без миграции — `order_items.testId` и `cart_items.testId` остаются ссылкой на `tests.id`.
+- **Реализация:**
+  - `drizzle/0005_genetic_blocks_packaging.sql` — ALTER + INSERT 5 блоков и 3 пакетов в копейках (×100), идемпотентно через ON CONFLICT.
+  - `src/lib/products/blocks.ts` — query-слой (`getActiveBlocks`, `getActivePackages`, `getBlockBySlug`, `calculateSavings`, `calculateAnchorPrice`) + 7 unit-тестов.
+  - `src/app/(public)/products/page.tsx` — витрина: hero + полный пакет + 5 блоков + якорь + 3 пакета + UTP-блок vs MyGenetics + FAQ + дисклеймер.
+  - `src/app/(public)/products/[slug]/page.tsx` — 5 страниц блоков через `generateStaticParams`.
+  - `src/app/(public)/products/full/page.tsx` — выделенная страница главного коммерческого SKU.
+  - `src/components/products/{block-card,package-card,subblock-accordion}.tsx` — переиспользуемые компоненты.
+  - `src/config/site.ts` — «Продукты» первым пунктом, «Каталог» → «Отдельные тесты».
+  - `src/app/(public)/catalog/page.tsx` — скоупится на `product_type='test'` + баннер-переход на `/products`.
+  - `src/components/genetic-quiz/quiz-flow.tsx` — CTA с `/catalog` на `/products/nutrition` (закрывает follow-up из roadmap).
+- **Не сделано (явно):** реальный платёжный шлюз (YooKassa) — следующий шаг; booking-UI консультации Блока 5 — пока текстом; точные rs-списки блоков 2–5 — ждём авторский список Галины (для Блока 1 рендерим из `quiz-logic.ts`, для остальных — честный плейсхолдер).
+- **Verification:** все 10 публичных маршрутов отвечают 200 (`/`, `/products`, `/products/{nutrition,body,beauty-safety,mind,risks,full}`, `/catalog`, `/genetic-quiz`); 69 unit-тестов зелёные; TS `tsc --noEmit` чистый.
+- **План:** `docs/superpowers/plans/2026-05-28-genetic-blocks-packaging.md`.
+
 ### 2026-05-22 — Стратегический разворот: один женский аватар + модульные ген-блоки (ADR-001/002)
 
 - **Что сделано:** По итогам разговоров с Галиной (21–22.05) зафиксирован разворот продуктовой стратегии и продуктовая архитектура.
@@ -103,12 +122,4 @@
 - Обновлён `agent_docs/index.md` — добавлен раздел «База знаний для Genesis Coach».
 - **Решение:** knowledge_base/ — отдельная директория для контента обучения бота, не смешивается с agent_docs/ (проектная документация). Книга структурирована как набор протоколов, а не пересказ — для прямого использования ботом.
 - **Связь с проектом:** контент коррелирует с Longevity Pyramid (уровни 1–2: lifestyle + нутрицевтики), Protocol Engine и Genesis Coach. Особенно ценны: циркадный протокол, чекап биомаркеров, формулы биовозраста, 12 принципов.
-
-### 2026-03-23 — Добавлен фреймворк Longevity Pyramid
-
-- **Источник:** Martinović et al. (2024) "Climbing the longevity pyramid" — *Frontiers in Aging* 5:1495029. Peer-reviewed обзор (20 стр.) доказательных стратегий longevity-медицины.
-- Создан `conept/genesis_longevity_pyramid.md` — детальный документ с 5 уровнями пирамиды: диагностика, lifestyle, нутрицевтики, фармакологические/нефармакологические, экспериментальные. Включает конкретные биомаркеры, дозировки добавок, механизмы действия, ссылки на ключевые исследования (CALERIE, TAME, Blue Zones).
-- Обновлён `conept/genesis_concept.md` — Protocol Engine расширен с 4-уровневой пирамиды (совещание) до полной 5-уровневой Longevity Pyramid; добавлена ссылка на научную основу в позиционирование.
-- Обновлён `agent_docs/architecture.md` — Protocol Engine привязан к Longevity Pyramid с маппингом уровней на модули и версии Genesis.
-- **Решение:** Longevity Pyramid — научный фундамент всего Protocol Engine. Уровни 1–2 в MVP, уровень 3 в v2, уровни 4–5 — информирование/контент.
 

@@ -5,6 +5,16 @@
 
 ---
 
+### 2026-03-23 — Добавлен фреймворк Longevity Pyramid
+
+- **Источник:** Martinović et al. (2024) "Climbing the longevity pyramid" — *Frontiers in Aging* 5:1495029. Peer-reviewed обзор (20 стр.) доказательных стратегий longevity-медицины.
+- Создан `conept/genesis_longevity_pyramid.md` — детальный документ с 5 уровнями пирамиды: диагностика, lifestyle, нутрицевтики, фармакологические/нефармакологические, экспериментальные. Включает конкретные биомаркеры, дозировки добавок, механизмы действия, ссылки на ключевые исследования (CALERIE, TAME, Blue Zones).
+- Обновлён `conept/genesis_concept.md` — Protocol Engine расширен с 4-уровневой пирамиды (совещание) до полной 5-уровневой Longevity Pyramid; добавлена ссылка на научную основу в позиционирование.
+- Обновлён `agent_docs/architecture.md` — Protocol Engine привязан к Longevity Pyramid с маппингом уровней на модули и версии Genesis.
+- **Решение:** Longevity Pyramid — научный фундамент всего Protocol Engine. Уровни 1–2 в MVP, уровень 3 в v2, уровни 4–5 — информирование/контент.
+
+---
+
 ### 2026-03-23 — Добавлен модуль Longevity Calculator
 
 - **Источник:** референс longevity-tools.com (Zsolt Szabo).
