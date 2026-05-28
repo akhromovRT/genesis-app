@@ -42,7 +42,7 @@ export default async function CheckoutSuccessPage({
             <Link href="/dashboard/orders">
               <Button>Мои заказы</Button>
             </Link>
-            <Link href="/catalog">
+            <Link href="/products">
               <Button variant="outline">Продолжить покупки</Button>
             </Link>
           </div>

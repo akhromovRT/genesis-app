@@ -76,8 +76,8 @@ export default function CheckoutPage() {
         <p className="mt-2 text-muted-foreground">
           Добавьте тесты в корзину для оформления заказа
         </p>
-        <Link href="/catalog" className="mt-8 inline-block">
-          <Button>Перейти в каталог</Button>
+        <Link href="/products" className="mt-8 inline-block">
+          <Button>Перейти к продуктам</Button>
         </Link>
       </div>
     );
@@ -217,6 +217,10 @@ export default function CheckoutPage() {
 
                 <p className="text-center text-xs text-muted-foreground">
                   Нажимая кнопку, вы соглашаетесь с условиями оферты
+                </p>
+                <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-center text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
+                  Тестовый режим: оплата не списывается. Заказ создаётся, с вами
+                  свяжется куратор для согласования.
                 </p>
               </CardContent>
             </Card>

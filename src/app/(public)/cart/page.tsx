@@ -18,10 +18,10 @@ export default function CartPage() {
         <ShoppingCart className="mx-auto h-16 w-16 text-muted-foreground/50" />
         <h1 className="mt-6 text-2xl font-bold">Корзина пуста</h1>
         <p className="mt-2 text-muted-foreground">
-          Добавьте генетические тесты из каталога
+          Добавьте блок или пакет ДНК-отчёта «Красивое долголетие»
         </p>
-        <Link href="/catalog" className="mt-8 inline-block">
-          <Button>Перейти в каталог</Button>
+        <Link href="/products" className="mt-8 inline-block">
+          <Button>Перейти к продуктам</Button>
         </Link>
       </div>
     );
@@ -42,7 +42,13 @@ export default function CartPage() {
             <CardContent className="flex items-center gap-4 p-4">
               <div className="flex-1">
                 <Link
-                  href={`/catalog/${item.slug}`}
+                  href={
+                    item.categoryName === "Красивое долголетие"
+                      ? item.slug === "full-package"
+                        ? "/products/full"
+                        : `/products/${item.slug}`
+                      : `/catalog/${item.slug}`
+                  }
                   className="font-medium hover:text-primary"
                 >
                   {item.name}
