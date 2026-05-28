@@ -39,6 +39,9 @@ export const categories = pgTable("categories", {
 ]);
 
 // ── Tests ─────────────────────────────────────────────────────
+// productType = 'test'    — индивидуальный тест из CERBALAB (легаси-каталог /catalog)
+// productType = 'block'   — генетический блок ДНК-отчёта «Красивое долголетие» (/products/[slug])
+// productType = 'package' — пакетное предложение из блоков (/products, /products/full)
 export const tests = pgTable("tests", {
   id: uuid("id").primaryKey().defaultRandom(),
   categoryId: uuid("category_id").notNull().references(() => categories.id),
@@ -56,12 +59,20 @@ export const tests = pgTable("tests", {
   imageUrl: text("image_url"),
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
+  productType: text("product_type").notNull().default("test"),
+  painHeadline: text("pain_headline").default(""),
+  subblocks: jsonb("subblocks"),
+  includedBlockSlugs: jsonb("included_block_slugs"),
+  giftBlockSlug: text("gift_block_slug"),
+  consultationHours: integer("consultation_hours").default(0),
+  compareAtPrice: integer("compare_at_price"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 }, (table) => [
   index("idx_tests_category_id").on(table.categoryId),
   index("idx_tests_slug").on(table.slug),
   index("idx_tests_is_active").on(table.isActive),
+  index("idx_tests_product_type").on(table.productType),
 ]);
 
 // ── Orders ────────────────────────────────────────────────────
