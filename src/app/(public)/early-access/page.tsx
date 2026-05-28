@@ -4,38 +4,39 @@ import { EarlyAccessForm } from "./form";
 export const metadata: Metadata = {
   title: "Early Access — Genesis · Красивое долголетие по вашей ДНК",
   description:
-    "Genesis — расширенная панель 225 ген-точек и научная база 2025–2026 года. Wellness-трио за 27 900 ₽ или полный пакет с 2 ч консультации Галины Хусаиновой. Только для гостей круглого стола.",
+    "Genesis — расширенная панель 225 ген-точек и научная база 2025–2026 года. Wellness-трио за 27 900 ₽ (обычная цена 42 900 ₽) или полный пакет 55 900 ₽ с 2 ч консультации Галины Хусаиновой. Только для гостей круглого стола.",
 };
 
+// Тексты блоков — дословно по спецификации Галины (TG 2026-05-27 18:28).
 const blocks = [
   {
     num: "01",
     title: "Стройность и питание без угадывания",
-    desc: "Почему подруга худеет на одной диете, а у вас вес стоит. Почему кофе бодрит или ломает сон. Почему после сладкого тянет ещё. Почему лицо «заливает» от соли, а железо, витамин D и B-витамины нельзя покупать вслепую.",
+    desc: "Почему подруга худеет на одной диете, а у вас вес стоит. Почему кофе может бодрить или ломать сон. Почему после сладкого тянет ещё. Почему лицо «заливает» от соли, а железо, витамин D и B-витамины нельзя покупать вслепую.",
     helps:
-      "Блок помогает понять индивидуальные стратегии питания, чувствительность к нутриентам, реакцию на жиры, сахар, кофеин и алкоголь, особенности усвоения витаминов и минералов.",
+      "Блок помогает понять индивидуальные реакции на жиры, сахар, кофеин, соль, алкоголь, лактозу, железо, витамин D, B-витамины, липиды и восстановление.",
     price: "15 900 ₽",
   },
   {
     num: "02",
-    title: "Тело в форме",
-    desc: "Силовые или кардио, восстановление после нагрузок, риск травм связок и суставов, плотность костей.",
+    title: "Тело в форме: спорт, мышцы, суставы",
+    desc: "Почему тренировки есть, а вес и объёмы почти не меняются. Какие нагрузки телу ближе: силовые, кардио, интервальные или умеренная регулярная активность. Почему после спорта бывает не прилив сил, а разбитость, боль в мышцах и откат.",
     helps:
-      "Блок помогает понять, какие нагрузки строят именно ваше тело, где нужна осторожность и сколько времени телу нужно на восстановление.",
+      "Блок помогает выстроить персональный подход к тренировкам: форма тела, мышцы, восстановление, суставы, связки, костный ресурс и риск перегруза.",
     price: "15 900 ₽",
   },
   {
     num: "03",
-    title: "Beauty Safety",
-    desc: "Почему ваша кожа стареет именно так и какие косметологические процедуры будут работать, а какие — нет.",
+    title: "Beauty Safety: кожа, волосы, процедуры, восстановление",
+    desc: "Где нужна осторожность с процедурами: кожа, восстановление, пигментация, воспаление и предсказуемость результата. Почему кожа стала суше, чувствительнее, быстрее краснеет, хуже переносит активный уход и дольше восстанавливается после косметологии.",
     helps:
-      "Блок помогает понять кожный барьер, особенности коллагена и эластина, склонность к обезвоживанию, воспалительную реактивность, антиоксидантную защиту, гликирование, плотность тканей, гормональную эстетику 40+ и восстановление после косметологии.",
+      "Блок показывает генетику эстетической предсказуемости: кожный барьер, особенности коллагена и эластина, склонность к обезвоживанию, воспалительная реактивность, антиоксидантная защита, гликирование, плотность тканей, гормональная эстетика 40+ и восстановление после косметологии.",
     price: "15 900 ₽",
   },
   {
     num: "04",
     title: "Мозг, сон, стресс и мотивация",
-    desc: "Хронотип, естественная реакция на стресс, склонность к тревожности, выгоранию, снижению мотивации. Насколько критично соблюдать режим сна именно вашему организму.",
+    desc: "Хронотип, естественная реакция на стресс, склонность к тревожности, выгоранию, снижению мотивации и восстановлению. Насколько критично соблюдать режим сна именно вашему организму.",
     helps:
       "Блок помогает понять, какие контуры качества жизни требуют защиты: сон, стресс, мотивация, дофаминовое подкрепление, тревожный фон, фокус, память и восстановление после перегруза.",
     price: "14 900 ₽",
@@ -293,6 +294,15 @@ export default function EarlyAccessPage() {
 
           <div className="grid gap-10 md:grid-cols-2 md:gap-16 items-start">
             <div>
+              <p
+                className="text-stone-100/70 mb-1"
+                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+              >
+                Обычная цена{" "}
+                <span className="line-through decoration-amber-300/60">
+                  42 900 ₽
+                </span>
+              </p>
               <div
                 className="text-7xl md:text-8xl font-light leading-none mb-3"
                 style={{
@@ -306,20 +316,20 @@ export default function EarlyAccessPage() {
                 className="text-stone-100/85 italic mb-8"
                 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
               >
-                для участников этого зала
+                Специальная цена только для участников встречи. Не публичный
+                тариф.
               </p>
               <p
                 className="text-[0.7rem] mb-3 font-medium tracking-[0.32em] uppercase text-amber-200"
               >
-                Что входит
+                Вы получаете
               </p>
               <ul className="space-y-3">
                 {[
-                  "01 · Стройность и питание",
-                  "02 · Тело в форме",
-                  "03 · Beauty Safety",
+                  "Wellness-трио: питание, тело, Beauty Safety",
                   "Закрытый чат участников Early Access",
-                  "Действует 7 дней после встречи",
+                  "Возможность апгрейда до полного пакета",
+                  "Цена действует 7 дней после встречи",
                 ].map((p) => (
                   <li
                     key={p}
@@ -335,45 +345,89 @@ export default function EarlyAccessPage() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-6 text-xs text-stone-200/70 italic leading-relaxed">
+                * Консультация эксперта не входит в Wellness-трио. Её можно
+                дозаказать отдельно или получить в составе полного пакета.
+              </p>
+              <div className="mt-8">
+                <a
+                  href="#early-access-form"
+                  data-package="wellness-trio"
+                  className="inline-flex items-center gap-3 rounded-full bg-amber-300 px-7 py-4 text-base font-medium text-emerald-950 transition hover:bg-amber-200"
+                >
+                  Зафиксировать цену 27 900 ₽
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
 
             <div className="rounded-2xl border border-amber-300/30 bg-white/[0.06] p-8 backdrop-blur">
               <p className="text-[0.7rem] mb-4 font-medium tracking-[0.32em] uppercase text-amber-200">
-                Полный пакет
+                Хотите сразу полную карту ДНК?
               </p>
-              <p
-                className="text-xl md:text-2xl font-light leading-snug mb-5"
+              <h3
+                className="text-3xl md:text-4xl font-light leading-tight mb-4"
                 style={{
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
                 }}
               >
-                Привычки и риски важно отслеживать{" "}
+                Красивое долголетие
+                <br />
                 <em
                   className="not-italic"
                   style={{ color: "#FCD34D", fontStyle: "italic" }}
                 >
-                  в динамике
+                  полный пакет
                 </em>
-                .
-              </p>
+              </h3>
               <p
-                className="text-xl md:text-2xl font-light leading-snug mb-6"
+                className="text-base text-stone-100/85 mb-6 leading-relaxed"
+                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+              >
+                225 ген-точек + 5 блоков + 2 часа консультации с
+                экспертом-разработчиком проекта.
+              </p>
+              <p className="text-[0.7rem] mb-2 font-medium tracking-[0.32em] uppercase text-amber-200">
+                Горячий тариф Early Access
+              </p>
+              <div
+                className="text-5xl md:text-6xl font-light leading-none mb-6"
                 style={{
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  letterSpacing: "-0.04em",
                 }}
               >
-                Отдельно 2 часа консультации стоят{" "}
-                <em
-                  className="not-italic"
-                  style={{ color: "#FCD34D", fontStyle: "italic" }}
-                >
-                  30 000 ₽
-                </em>
-                . В полном пакете они уже включены.
+                55 900 <sup className="text-sm text-amber-200">₽</sup>
+              </div>
+              <p className="text-[0.7rem] mb-3 font-medium tracking-[0.32em] uppercase text-amber-200">
+                В полном пакете
               </p>
-              <div className="border-t border-amber-300/20 pt-6">
+              <ul className="space-y-2.5 text-base leading-snug">
+                {[
+                  "Полная панель «Долголетие» на 225 ген-точек",
+                  "Все 5 модульных блоков",
+                  "Разбор питания, тела, кожи, сна, стресса, основных рисков здоровья и безопасной аптечки",
+                  "2 часа онлайн-консультации с Галиной Хусаиновой",
+                  "Понимание, какие анализы и привычки требуют большего внимания именно у вас",
+                ].map((p) => (
+                  <li
+                    key={p}
+                    className="relative pl-7"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    }}
+                  >
+                    <span className="absolute left-0 top-1 text-amber-300">
+                      ✦
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+              <div className="border-t border-amber-300/20 mt-6 pt-6">
                 <a
                   href="#early-access-form"
+                  data-package="full"
                   className="inline-flex items-center gap-3 rounded-full bg-amber-300 px-7 py-4 text-base font-medium text-emerald-950 transition hover:bg-amber-200"
                 >
                   Хочу полный пакет
