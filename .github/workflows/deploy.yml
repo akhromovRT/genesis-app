@@ -52,6 +52,42 @@ jobs:
             set -euo pipefail
             echo "$GH_TOKEN" | docker login ghcr.io -u akhromovrt --password-stdin
             docker pull "$IMAGE:latest"
+
+            # ── Apply pending DB migrations BEFORE restarting the app ──
+            # Извлекаем drizzle/*.sql из свежего образа и прогоняем psql-ом
+            # под тем же DATABASE_URL, что и приложение. ALTER ADD COLUMN
+            # IF NOT EXISTS + INSERT ON CONFLICT делают это идемпотентным.
+            # Старый контейнер ещё крутится — если миграции упадут,
+            # деплой завершится с ошибкой, но прод не сломан.
+            echo "=== Applying DB migrations ==="
+            if ! command -v psql >/dev/null 2>&1; then
+              echo "ERROR: psql not found on host — install postgresql-client" >&2
+              exit 1
+            fi
+            ENV_FILE=/opt/sites/genesis-app/.env
+            if [ ! -f "$ENV_FILE" ]; then
+              echo "ERROR: $ENV_FILE not found; cannot read DATABASE_URL" >&2
+              exit 1
+            fi
+            set -a
+            # shellcheck disable=SC1090
+            . "$ENV_FILE"
+            set +a
+            if [ -z "${DATABASE_URL:-}" ]; then
+              echo "ERROR: DATABASE_URL not set in $ENV_FILE" >&2
+              exit 1
+            fi
+            TMPDIR=$(mktemp -d)
+            trap 'rm -rf "$TMPDIR"' EXIT
+            CID=$(docker create "$IMAGE:latest")
+            docker cp "$CID":/app/drizzle "$TMPDIR/drizzle"
+            docker rm "$CID" >/dev/null
+            for f in $(ls -1 "$TMPDIR"/drizzle/*.sql 2>/dev/null | sort); do
+              echo "Applying $(basename "$f")"
+              psql "$DATABASE_URL" -v ON_ERROR_STOP=on -f "$f"
+            done
+            echo "=== Migrations done ==="
+
             docker compose -f /opt/sites/genesis-app/docker-compose.yml up -d --remove-orphans --force-recreate
             docker image prune -f
             echo "Deploy finished OK"

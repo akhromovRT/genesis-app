@@ -19,6 +19,8 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# drizzle/ нужен, чтобы CI/deploy мог применять SQL-миграции из свежего образа
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 
 RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
 
