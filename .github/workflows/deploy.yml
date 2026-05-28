@@ -96,11 +96,11 @@ jobs:
             # Bootstrap: если public.tests уже существует — значит первичная
             # схема была применена руками до этого механизма. Помечаем
             # 0001-0004 как применённые (ON CONFLICT DO NOTHING делает
-            # это безопасным повторно). postgres boolean в -tA mode = 't'/'f'.
+            # это безопасным повторно).
+            # NB: postgres (bool)::text печатает full word — 'true'/'false'.
             HAS_TESTS=$(docker exec "$PG_CONTAINER" psql "$DATABASE_URL" -tAXc \
               "SELECT (to_regclass('public.tests') IS NOT NULL)::text" | tr -d '[:space:]')
-            echo "DEBUG: HAS_TESTS=[$HAS_TESTS]"
-            if [ "$HAS_TESTS" = "t" ]; then
+            if [ "$HAS_TESTS" = "true" ]; then
               echo "Pre-existing schema detected; marking 0001-0004 as applied"
               docker exec "$PG_CONTAINER" psql "$DATABASE_URL" -v ON_ERROR_STOP=on -c \
                 "INSERT INTO schema_migrations (filename) VALUES ('0001_init.sql'),('0002_dna_tables.sql'),('0003_questionnaire.sql'),('0004_early_access_leads.sql') ON CONFLICT DO NOTHING" >/dev/null
