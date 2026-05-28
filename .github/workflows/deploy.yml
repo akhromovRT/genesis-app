@@ -90,29 +90,19 @@ jobs:
 
             # Tracking table — что уже применено, чтобы не запускать 0001-0004
             # повторно (они не идемпотентны: CREATE TRIGGER без IF NOT EXISTS).
-            docker exec -i "$PG_CONTAINER" psql "$DATABASE_URL" -v ON_ERROR_STOP=on <<'SQL'
-            CREATE TABLE IF NOT EXISTS schema_migrations (
-              filename text PRIMARY KEY,
-              applied_at timestamptz NOT NULL DEFAULT now()
-            );
-            SQL
+            docker exec "$PG_CONTAINER" psql "$DATABASE_URL" -v ON_ERROR_STOP=on -c \
+              "CREATE TABLE IF NOT EXISTS schema_migrations (filename text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())" >/dev/null
 
             # Bootstrap: если tracking-таблица пуста, но tests уже существует —
             # значит первичная схема была применена руками до этого механизма.
             # Помечаем 0001-0004 как уже применённые.
+            # postgres boolean в -tA mode печатается как 't' или 'f'.
             NEED_BOOTSTRAP=$(docker exec "$PG_CONTAINER" psql "$DATABASE_URL" -tAXc \
               "SELECT (count(*)=0 AND to_regclass('public.tests') IS NOT NULL)::text FROM schema_migrations" | tr -d '[:space:]')
-            # postgres boolean prints as 't' or 'f' in unaligned/-tA mode
             if [ "$NEED_BOOTSTRAP" = "t" ]; then
               echo "Bootstrapping schema_migrations with legacy entries"
-              docker exec -i "$PG_CONTAINER" psql "$DATABASE_URL" -v ON_ERROR_STOP=on <<'SQL'
-              INSERT INTO schema_migrations (filename) VALUES
-                ('0001_init.sql'),
-                ('0002_dna_tables.sql'),
-                ('0003_questionnaire.sql'),
-                ('0004_early_access_leads.sql')
-              ON CONFLICT DO NOTHING;
-              SQL
+              docker exec "$PG_CONTAINER" psql "$DATABASE_URL" -v ON_ERROR_STOP=on -c \
+                "INSERT INTO schema_migrations (filename) VALUES ('0001_init.sql'),('0002_dna_tables.sql'),('0003_questionnaire.sql'),('0004_early_access_leads.sql') ON CONFLICT DO NOTHING" >/dev/null
             fi
 
             for f in $(ls -1 "$TMPDIR"/drizzle/*.sql 2>/dev/null | sort); do
