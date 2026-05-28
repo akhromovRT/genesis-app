@@ -61,8 +61,14 @@ jobs:
             # деплой завершится с ошибкой, но прод не сломан.
             echo "=== Applying DB migrations ==="
             if ! command -v psql >/dev/null 2>&1; then
-              echo "ERROR: psql not found on host — install postgresql-client" >&2
-              exit 1
+              echo "Installing postgresql-client (one-time)..."
+              if command -v apt-get >/dev/null 2>&1; then
+                DEBIAN_FRONTEND=noninteractive apt-get update -qq
+                DEBIAN_FRONTEND=noninteractive apt-get install -y -qq postgresql-client
+              else
+                echo "ERROR: psql not found and apt-get unavailable" >&2
+                exit 1
+              fi
             fi
             ENV_FILE=/opt/sites/genesis-app/.env
             if [ ! -f "$ENV_FILE" ]; then
