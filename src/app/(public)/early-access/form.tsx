@@ -67,12 +67,14 @@ export function EarlyAccessForm() {
         >
           Спасибо, {form.name.split(" ")[0]}.{" "}
           <em style={{ color: "#1F6B4A", fontStyle: "italic" }}>
-            Цена 27 900 ₽ за wellness-трио зафиксирована за вами.
+            Ваша заявка на Early Access зафиксирована.
           </em>
         </h3>
         <p className="text-stone-700 leading-relaxed">
-          Мы свяжемся в течение 24 часов на указанные email и телефон. Если
-          понадобится связаться раньше — пишите на{" "}
+          Мы свяжемся в течение 24 часов на указанные email и телефон,
+          расскажем детали полного пакета и поможем оформить заявку в
+          ближайшей партнёрской лаборатории. Если понадобится связаться
+          раньше — пишите на{" "}
           <a
             className="underline"
             style={{ color: "#1F6B4A" }}
@@ -130,15 +132,15 @@ export function EarlyAccessForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="ea-pain">
-          Главная боль{" "}
+          Что вы хотите прояснить с помощью генетики?{" "}
           <span className="text-stone-400 font-normal text-xs">
-            (что сильнее всего волнует — кратко)
+            (опционально)
           </span>
         </Label>
         <Textarea
           id="ea-pain"
-          rows={3}
-          placeholder="Например: вес уходит и возвращается, нет энергии, кожа реагирует на всё подряд…"
+          rows={4}
+          placeholder="Например: вес стоит, сложно удерживать питание, усталость, плохой сон, тревожный фон, кожа стала хуже, хочу безопаснее подойти к косметологии, хочу понять спорт и восстановление, хочу проверить основные риски здоровья."
           value={form.mainPain}
           onChange={(e) => update("mainPain", e.target.value)}
           disabled={disabled}
@@ -159,11 +161,11 @@ export function EarlyAccessForm() {
           className="w-full md:w-auto text-base"
           style={{ background: "#1F6B4A" }}
         >
-          {disabled ? "Отправляем…" : "Зафиксировать цену 27 900 ₽"}
+          {disabled ? "Отправляем…" : "Зафиксировать Early Access"}
         </Button>
         <p className="text-xs text-stone-500 mt-3">
           Отправляя заявку, вы соглашаетесь на обработку контактных данных в
-          целях связи. Не передаём третьим лицам.
+          целях связи. Мы не передаём данные третьим лицам.
         </p>
       </div>
     </form>

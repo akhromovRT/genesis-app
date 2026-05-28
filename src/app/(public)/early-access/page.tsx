@@ -4,48 +4,51 @@ import { EarlyAccessForm } from "./form";
 export const metadata: Metadata = {
   title: "Early Access — Genesis · Красивое долголетие по вашей ДНК",
   description:
-    "Genesis ДНК-отчёт. Wellness-трио (питание, тело, beauty) за 27 900 ₽ вместо 42 900 ₽ — только для гостей круглого стола. Экономия 15 000 ₽.",
+    "Genesis — расширенная панель 225 ген-точек и научная база 2025–2026 года. Wellness-трио за 27 900 ₽ или полный пакет с 2 ч консультации Галины Хусаиновой. Только для гостей круглого стола.",
 };
 
 const blocks = [
   {
     num: "01",
-    title: "Стройность и питание",
-    desc: "Жиры, сахар, кофе, лактоза. Почему вы поправляетесь от того, от чего подруга — нет.",
+    title: "Стройность и питание без угадывания",
+    desc: "Почему подруга худеет на одной диете, а у вас вес стоит. Почему кофе бодрит или ломает сон. Почему после сладкого тянет ещё. Почему лицо «заливает» от соли, а железо, витамин D и B-витамины нельзя покупать вслепую.",
+    helps:
+      "Блок помогает понять индивидуальные стратегии питания, чувствительность к нутриентам, реакцию на жиры, сахар, кофеин и алкоголь, особенности усвоения витаминов и минералов.",
     price: "15 900 ₽",
   },
   {
     num: "02",
     title: "Тело в форме",
-    desc: "Кардио или силовая, восстановление, ваши суставы, риск травм.",
+    desc: "Силовые или кардио, восстановление после нагрузок, риск травм связок и суставов, плотность костей.",
+    helps:
+      "Блок помогает понять, какие нагрузки строят именно ваше тело, где нужна осторожность и сколько времени телу нужно на восстановление.",
     price: "15 900 ₽",
   },
   {
     num: "03",
     title: "Beauty Safety",
-    desc: "Кожа, морщины, пигментация. Какие косметологические процедуры будут работать, а какие — нет.",
+    desc: "Почему ваша кожа стареет именно так и какие косметологические процедуры будут работать, а какие — нет.",
+    helps:
+      "Блок помогает понять кожный барьер, особенности коллагена и эластина, склонность к обезвоживанию, воспалительную реактивность, антиоксидантную защиту, гликирование, плотность тканей, гормональную эстетику 40+ и восстановление после косметологии.",
     price: "15 900 ₽",
   },
   {
     num: "04",
     title: "Мозг, сон, стресс и мотивация",
-    desc: "Хронотип, регуляция стресса, мотивация и восстановление. На что критично соблюдать режим именно вашему организму.",
+    desc: "Хронотип, естественная реакция на стресс, склонность к тревожности, выгоранию, снижению мотивации. Насколько критично соблюдать режим сна именно вашему организму.",
+    helps:
+      "Блок помогает понять, какие контуры качества жизни требуют защиты: сон, стресс, мотивация, дофаминовое подкрепление, тревожный фон, фокус, память и восстановление после перегруза.",
     price: "14 900 ₽",
   },
   {
     num: "05",
-    title: "Риски и персональная аптечка",
-    desc: "Сердце, сосуды, онконастороженность. Где выше риск побочных эффектов лекарств. Включает 2 ч консультации с Галиной Хусаиновой.",
+    title: "Основные риски здоровья + безопасная аптечка",
+    desc: "Сердце, сосуды, гемостаз, воспаление, гормональный профиль, онконастороженность и индивидуальная реакция на лекарства.",
+    helps:
+      "Блок помогает понять, какие зоны здоровья важно контролировать внимательнее и какие препараты могут работать иначе: слабее, сильнее или с более высоким риском побочных эффектов.",
     price: "27 300 ₽",
     em: true,
   },
-];
-
-const promises = [
-  "Wellness-трио — три ключевых блока без консультации",
-  "Закрытый чат участников Early Access",
-  "Действует 7 дней после встречи",
-  "Возможность апгрейда до полного пакета с консультацией",
 ];
 
 export default function EarlyAccessPage() {
@@ -80,8 +83,23 @@ export default function EarlyAccessPage() {
           className="mt-6 max-w-2xl text-lg md:text-xl italic text-stone-600 leading-relaxed"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
         >
-          Ваше тело — не лотерея. Это инструкция, которую вы ещё не прочитали.
+          Ваше тело — не лотерея. ДНК — инструкция, которую мы помогаем
+          корректно прочесть.
         </p>
+        <div className="mt-8">
+          <a
+            href="#early-access-form"
+            className="inline-flex items-center gap-3 rounded-full px-7 py-4 text-base font-medium text-white shadow-sm transition hover:shadow-md"
+            style={{ background: "#1F6B4A" }}
+          >
+            Зафиксировать лучшую цену 27 900 ₽
+            <span aria-hidden="true">→</span>
+          </a>
+          <p className="mt-3 text-xs text-stone-500">
+            Только для гостей круглого стола · Wellness-трио. Полный пакет с
+            консультацией — на форме.
+          </p>
+        </div>
       </div>
 
       {/* ── INTRO ─────────────────────────────────────── */}
@@ -106,7 +124,7 @@ export default function EarlyAccessPage() {
               <em style={{ color: "#1F6B4A", fontStyle: "italic" }}>
                 стройной, энергичной и ухоженной
               </em>{" "}
-              в любом возрасте.
+              в каждом возрасте.
             </h2>
             <div className="mt-8 flex flex-wrap gap-6 text-sm text-stone-600">
               <div>
@@ -153,7 +171,7 @@ export default function EarlyAccessPage() {
               className="text-[0.7rem] mb-3 font-medium tracking-[0.32em] uppercase"
               style={{ color: "#B08D57" }}
             >
-              Почему мы точнее
+              Глубже и точнее
             </p>
             <div
               className="text-5xl md:text-6xl font-light leading-none"
@@ -162,13 +180,21 @@ export default function EarlyAccessPage() {
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
               }}
             >
-              +50<sup className="text-base text-stone-400">%</sup>
+              до +50<sup className="text-base text-stone-400">%</sup>
             </div>
-            <p className="mt-4 text-sm text-stone-600 leading-relaxed">
-              достоверность интерпретации vs распространённые ДНК-отчёты на рынке.{" "}
-              Большинство — на научной базе 5–10 лет. Genesis опирается на
-              исследования, актуальные на 2025–2026 год. База регулярно
-              обновляется.
+            <p className="mt-4 text-sm text-stone-700 leading-relaxed">
+              больше проверенных ген-точек по сравнению с типовыми ДНК-панелями
+              на 140–150 маркеров. Genesis использует расширенную панель из{" "}
+              <strong>225 ген-точек</strong> и обновлённую научную базу{" "}
+              <strong>2025–2026 года</strong>.
+            </p>
+            <p className="mt-3 text-sm text-stone-600 leading-relaxed">
+              Мы смотрим не отдельные «гены интереса», а{" "}
+              <em style={{ color: "#1F6B4A", fontStyle: "italic" }}>
+                связи между питанием, весом, кожей, восстановлением, стрессом,
+                основными рисками здоровья и реакцией на лекарства
+              </em>
+              .
             </p>
           </div>
         </div>
@@ -180,7 +206,7 @@ export default function EarlyAccessPage() {
           className="text-[0.7rem] mb-4 font-medium tracking-[0.32em] uppercase"
           style={{ color: "#B08D57" }}
         >
-          5 модульных блоков
+          Один анализ — 5 модульных блоков
         </p>
         <h2
           className="text-3xl md:text-4xl font-light leading-tight mb-10"
@@ -224,12 +250,17 @@ export default function EarlyAccessPage() {
                 </span>
               </div>
               <h3
-                className="text-xl font-light leading-snug mb-2"
+                className="text-xl font-light leading-snug mb-3"
                 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
               >
                 {b.title}
               </h3>
-              <p className="text-sm text-stone-600 leading-relaxed">{b.desc}</p>
+              <p className="text-sm text-stone-700 leading-relaxed mb-3">
+                {b.desc}
+              </p>
+              <p className="text-sm text-stone-500 leading-relaxed italic">
+                {b.helps}
+              </p>
             </div>
           ))}
         </div>
@@ -254,23 +285,14 @@ export default function EarlyAccessPage() {
             Wellness-трио
           </h2>
           <p
-            className="text-stone-100/85 italic text-lg mb-12"
+            className="text-stone-100/85 italic text-lg mb-12 max-w-2xl"
             style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
           >
-            три ключевых блока — питание, тело, beauty
+            три ключевых блока — питание, тело, Beauty Safety
           </p>
 
-          <div className="grid gap-10 md:grid-cols-2 md:gap-16 items-center">
+          <div className="grid gap-10 md:grid-cols-2 md:gap-16 items-start">
             <div>
-              <div
-                className="text-stone-100/50 line-through text-xl mb-1"
-                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-              >
-                42 900 ₽
-              </div>
-              <div className="text-stone-100/50 text-xs mb-6">
-                обычная цена wellness-трио
-              </div>
               <div
                 className="text-7xl md:text-8xl font-light leading-none mb-3"
                 style={{
@@ -281,38 +303,93 @@ export default function EarlyAccessPage() {
                 27 900 <sup className="text-base text-amber-200">₽</sup>
               </div>
               <p
-                className="text-stone-100/90 italic mb-6"
+                className="text-stone-100/85 italic mb-8"
                 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
               >
                 для участников этого зала
               </p>
-              <div className="inline-block pt-3 border-t border-amber-300/40 text-xs tracking-[0.28em] uppercase text-amber-200">
-                Экономия 15 000 ₽
-              </div>
+              <p
+                className="text-[0.7rem] mb-3 font-medium tracking-[0.32em] uppercase text-amber-200"
+              >
+                Что входит
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "01 · Стройность и питание",
+                  "02 · Тело в форме",
+                  "03 · Beauty Safety",
+                  "Закрытый чат участников Early Access",
+                  "Действует 7 дней после встречи",
+                ].map((p) => (
+                  <li
+                    key={p}
+                    className="relative pl-7 text-base leading-snug"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    }}
+                  >
+                    <span className="absolute left-0 top-1 text-amber-300">
+                      ✦
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <ul className="space-y-4">
-              {promises.map((p) => (
-                <li
-                  key={p}
-                  className="relative pl-8 text-lg leading-snug border-b border-stone-100/12 pb-4 last:border-b-0"
-                  style={{
-                    fontFamily: "'Cormorant Garamond', Georgia, serif",
-                  }}
+            <div className="rounded-2xl border border-amber-300/30 bg-white/[0.06] p-8 backdrop-blur">
+              <p className="text-[0.7rem] mb-4 font-medium tracking-[0.32em] uppercase text-amber-200">
+                Полный пакет
+              </p>
+              <p
+                className="text-xl md:text-2xl font-light leading-snug mb-5"
+                style={{
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                }}
+              >
+                Привычки и риски важно отслеживать{" "}
+                <em
+                  className="not-italic"
+                  style={{ color: "#FCD34D", fontStyle: "italic" }}
                 >
-                  <span className="absolute left-0 top-1 text-amber-300">
-                    ✦
-                  </span>
-                  {p}
-                </li>
-              ))}
-            </ul>
+                  в динамике
+                </em>
+                .
+              </p>
+              <p
+                className="text-xl md:text-2xl font-light leading-snug mb-6"
+                style={{
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                }}
+              >
+                Отдельно 2 часа консультации стоят{" "}
+                <em
+                  className="not-italic"
+                  style={{ color: "#FCD34D", fontStyle: "italic" }}
+                >
+                  30 000 ₽
+                </em>
+                . В полном пакете они уже включены.
+              </p>
+              <div className="border-t border-amber-300/20 pt-6">
+                <a
+                  href="#early-access-form"
+                  className="inline-flex items-center gap-3 rounded-full bg-amber-300 px-7 py-4 text-base font-medium text-emerald-950 transition hover:bg-amber-200"
+                >
+                  Хочу полный пакет
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── FORM ────────────────────────────────────────── */}
-      <section className="mx-auto max-w-3xl px-6 py-16 md:py-24">
+      <section
+        id="early-access-form"
+        className="mx-auto max-w-3xl px-6 py-16 md:py-24 scroll-mt-12"
+      >
         <p
           className="text-[0.7rem] mb-4 font-medium tracking-[0.32em] uppercase"
           style={{ color: "#1F6B4A" }}
@@ -320,26 +397,45 @@ export default function EarlyAccessPage() {
           30 секунд
         </p>
         <h2
-          className="text-3xl md:text-4xl font-light leading-tight mb-2"
+          className="text-3xl md:text-4xl font-light leading-tight mb-3"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
         >
           Оставьте контакт{" "}
           <em style={{ color: "#1F6B4A", fontStyle: "italic" }}>
             и зафиксируйте
           </em>{" "}
-          цену <span style={{ color: "#1F6B4A" }}>27 900 ₽</span>
+          Early Access
         </h2>
         <p className="text-stone-600 mb-8 leading-relaxed">
-          Мы свяжемся в течение 24 часов, расскажем детали и поможем с заказом
-          биоматериала.
+          Мы свяжемся с вами в течение 24 часов, расскажем детали и поможем
+          оформить заявку в ближайшей партнёрской лаборатории — в офисе или с
+          выездом на дом.
         </p>
         <EarlyAccessForm />
       </section>
 
-      <footer className="mx-auto max-w-6xl px-6 pb-12 pt-4 text-xs text-stone-500">
+      <footer className="mx-auto max-w-4xl px-6 pb-16 pt-4 text-sm text-stone-600 leading-relaxed space-y-4">
         <p>
-          genesisbio.ru/early-access · Genesis — не медицинская услуга. Не
-          ставим диагнозов, не назначаем лечение. Сфера ЗОЖ и натуропрактики.
+          <strong className="text-stone-700">Genesis</strong> — персональная
+          система оздоровления и активного долголетия.
+        </p>
+        <p>
+          Мы не ставим диагнозы, не назначаем лечение и не заменяем консультацию
+          врача или узкого специалиста по отдельным патологиям.
+        </p>
+        <p>
+          Генетический отчёт используется как инструмент профилактического
+          мышления, персонализации образа жизни и более точной подготовки к
+          обсуждению здоровья со специалистами.
+        </p>
+        <p>
+          Genesis поддерживает современную повестку сохранения здоровья и
+          активного долголетия. Мы помогаем выявлять индивидуальные уязвимости
+          раньше и персонализировать решения, которые снижают управляемые риски
+          преждевременной смертности и инвалидизации по естественным причинам.
+        </p>
+        <p className="text-xs text-stone-400 pt-4">
+          © 2026 Genesis · genesisbio.ru/early-access
         </p>
       </footer>
     </div>
