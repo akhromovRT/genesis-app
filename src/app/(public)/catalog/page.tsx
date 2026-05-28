@@ -43,7 +43,9 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   }));
 
   // Build conditions for tests query
-  const conditions = [eq(tests.isActive, true)];
+  // Скоупим архивный каталог только на индивидуальные тесты CERBALAB —
+  // блоки и пакеты «Красивое долголетие» живут на /products.
+  const conditions = [eq(tests.isActive, true), eq(tests.productType, "test")];
 
   if (params.category) {
     const category = mappedCategories.find((c) => c.slug === params.category);
@@ -100,13 +102,24 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold tracking-tight">
-          Каталог генетических тестов
+          Каталог отдельных тестов
         </h1>
         <p className="mt-2 text-muted-foreground">
           Более 80 исследований от лаборатории CERBALAB. Результат через 14–30
           рабочих дней.
+        </p>
+      </div>
+
+      {/* Баннер-переход на новую витрину */}
+      <div className="mb-8 rounded-lg border border-primary/30 bg-primary/5 p-4">
+        <p className="text-sm">
+          <strong>Новое:</strong> ДНК-отчёт «Красивое долголетие» — 5 модульных
+          блоков и пакеты со скидкой.{" "}
+          <a href="/products" className="font-medium text-primary hover:underline">
+            Перейти к продуктам →
+          </a>
         </p>
       </div>
 

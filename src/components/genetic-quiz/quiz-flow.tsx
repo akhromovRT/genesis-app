@@ -126,7 +126,7 @@ export function GeneticQuizFlow() {
                   {TOTAL_GENE_POINTS} генетических точек
                 </div>
               </div>
-              <Link href="/catalog">
+              <Link href="/products/nutrition">
                 <Button size="lg">Получить полный отчёт</Button>
               </Link>
             </div>

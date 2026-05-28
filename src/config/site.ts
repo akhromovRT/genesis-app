@@ -9,10 +9,11 @@ export const siteConfig = {
   },
   navigation: {
     main: [
-      { title: "Каталог тестов", href: "/catalog" },
-      { title: "Анкета", href: "/questionnaire" },
+      { title: "Продукты", href: "/products" },
       { title: "Генетический чекап", href: "/genetic-quiz" },
+      { title: "Анкета", href: "/questionnaire" },
       { title: "Калькулятор", href: "/calculator" },
+      { title: "Отдельные тесты", href: "/catalog" },
       { title: "О нас", href: "/about" },
       { title: "Контакты", href: "/contacts" },
     ],
