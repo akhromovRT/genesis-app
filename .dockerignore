@@ -21,5 +21,6 @@ AGENTS.md
 CLAUDE.md
 claude.md
 data/
-drizzle/
 docs/
+# drizzle/ намеренно НЕ исключён: его SQL-файлы нужны деплою для авто-миграции
+# (см. .github/workflows/deploy.yml шаг "Applying DB migrations")
