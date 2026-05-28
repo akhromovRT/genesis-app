@@ -60,15 +60,14 @@ jobs:
             # Старый контейнер ещё крутится — если миграции упадут,
             # деплой завершится с ошибкой, но прод не сломан.
             echo "=== Applying DB migrations ==="
-            if ! command -v psql >/dev/null 2>&1; then
-              echo "Installing postgresql-client (one-time)..."
-              if command -v apt-get >/dev/null 2>&1; then
-                DEBIAN_FRONTEND=noninteractive apt-get update -qq
-                DEBIAN_FRONTEND=noninteractive apt-get install -y -qq postgresql-client
-              else
-                echo "ERROR: psql not found and apt-get unavailable" >&2
-                exit 1
-              fi
+            # psql запускаем ВНУТРИ контейнера pass24-postgres — там же есть
+            # сам psql + hostname "pass24-postgres" резолвится в localhost
+            # контейнера. С VPS-хоста это имя не резолвится (docker-network),
+            # поэтому хостовой psql не подходит.
+            PG_CONTAINER=pass24-postgres
+            if ! docker ps --format '{{.Names}}' | grep -qx "$PG_CONTAINER"; then
+              echo "ERROR: container $PG_CONTAINER not running" >&2
+              exit 1
             fi
             ENV_FILE=/opt/sites/genesis-app/.env
             if [ ! -f "$ENV_FILE" ]; then
@@ -90,7 +89,8 @@ jobs:
             docker rm "$CID" >/dev/null
             for f in $(ls -1 "$TMPDIR"/drizzle/*.sql 2>/dev/null | sort); do
               echo "Applying $(basename "$f")"
-              psql "$DATABASE_URL" -v ON_ERROR_STOP=on -f "$f"
+              docker exec -i -e PGURL="$DATABASE_URL" "$PG_CONTAINER" \
+                sh -c 'psql "$PGURL" -v ON_ERROR_STOP=on' < "$f"
             done
             echo "=== Migrations done ==="
 
