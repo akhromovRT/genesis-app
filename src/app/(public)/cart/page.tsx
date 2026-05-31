@@ -58,50 +58,58 @@ export default function CartPage() {
                 </p>
               </div>
 
-              {/* Quantity */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                >
-                  <Minus className="h-3 w-3" />
-                </Button>
-                <span className="w-8 text-center text-sm font-medium">
-                  {item.quantity}
+              {/* Quantity — hidden for gift rows */}
+              {!item.isGift ? (
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                  <span className="w-8 text-center text-sm font-medium">
+                    {item.quantity}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <span className="text-sm font-medium text-emerald-600">
+                  Подарок
                 </span>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                >
-                  <Plus className="h-3 w-3" />
-                </Button>
-              </div>
+              )}
 
               {/* Price */}
               <div className="w-28 text-right">
                 <p className="font-semibold">
-                  {formatPrice(item.price * item.quantity)}
+                  {item.isGift ? "0 ₽" : formatPrice(item.price * item.quantity)}
                 </p>
-                {item.quantity > 1 && (
+                {!item.isGift && item.quantity > 1 && (
                   <p className="text-xs text-muted-foreground">
                     {formatPrice(item.price)} / шт.
                   </p>
                 )}
               </div>
 
-              {/* Remove */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                onClick={() => removeItem(item.id)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {/* Remove — hidden for gift rows */}
+              {!item.isGift && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                  onClick={() => removeItem(item.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </CardContent>
           </Card>
         ))}

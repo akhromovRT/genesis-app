@@ -41,14 +41,12 @@ export default async function ProductsPage() {
           ДНК-отчёт «Красивое долголетие»
         </Badge>
         <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
-          Персональная ДНК-карта для женщины,
-          <br />
-          которая хочет оставаться собой
+          Красивое долголетие по вашей ДНК
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-          5 модульных блоков, 225 генетических точек. Берите базу за{" "}
-          {formatPrice(blocks[0]?.price ?? 0)} или полный отчёт сразу — со скидкой и
-          2 часами консультации.
+          Полный ДНК-отчёт «Красивое долголетие» — 225 ген-точек в 5 блоках. Можно взять
+          целиком, со скидкой и 2 часами консультации, — или пройти путь пошагово, начиная
+          с питания.
         </p>
       </section>
 
@@ -66,7 +64,7 @@ export default async function ProductsPage() {
                   Все 5 блоков сразу: питание, тело, кожа, мозг, риски и аптечка.
                   225 ген-точек, 2 часа персональной консультации,
                   экономия {formatPrice(fullPackage.compareAtPrice! - fullPackage.price)} по
-                  сравнению с поштучной сборкой.
+                  сравнению с пошаговой сборкой.
                 </p>
                 <div className="mt-6 flex items-baseline gap-3">
                   <span className="text-4xl font-bold">{formatPrice(fullPackage.price)}</span>
@@ -105,8 +103,8 @@ export default async function ProductsPage() {
             5 блоков ДНК-отчёта
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Каждый блок отвечает на отдельную группу вопросов о теле. Берите по одному
-            или сразу комплектом.
+            Это шаги одного пути к полному отчёту. Первый шаг — питание; дальше блоки
+            открываются по очереди. Полный отчёт выгоднее любой пошаговой сборки.
           </p>
         </div>
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -117,15 +115,15 @@ export default async function ProductsPage() {
               highlight={HIGHLIGHT_BY_SLUG[b.slug] ?? null}
             />
           ))}
-          {/* Якорь «поштучно» — не SKU, не кликается, нужен для психологии цены */}
+          {/* Якорь «поэтапно» — не SKU, не кликается, нужен для психологии цены */}
           <Card className="flex h-full flex-col border-dashed bg-muted/30">
             <CardContent className="flex flex-1 flex-col justify-center p-6 text-center">
-              <p className="text-sm text-muted-foreground">Поштучно (прайс-якорь)</p>
+              <p className="text-sm text-muted-foreground">Поэтапно, по шагам</p>
               <p className="mt-2 text-3xl font-bold text-muted-foreground line-through">
                 {formatPrice(anchorPrice)}
               </p>
               <p className="mt-3 text-xs text-muted-foreground">
-                Если брать все 5 блоков по одному. В пакетах — выгоднее на{" "}
+                Если собирать отчёт пошагово, блок за блоком. В пакетах — выгоднее на{" "}
                 {fullPackage ? formatPrice(anchorPrice - fullPackage.price) : "—"}.
               </p>
             </CardContent>
@@ -154,49 +152,36 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      {/* ── Конкурентное позиционирование ────────────────────── */}
+      {/* ── Чем отличается отчёт Genesis ─────────────────────── */}
       <section className="mt-20">
         <Card>
-          <CardContent className="grid gap-8 p-8 lg:grid-cols-3 lg:items-center">
-            <div className="lg:col-span-2">
-              <h2 className="text-2xl font-bold tracking-tight">
-                Почему Genesis, а не другая лаборатория
-              </h2>
-              <div className="mt-4 space-y-3 text-sm">
-                <div className="flex gap-3">
-                  <FlaskConical className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <p>
-                    <strong>Свежая наука.</strong> Большинство лабораторий читают
-                    панель по базе данных 10–15-летней давности. У нас — обновлённые
-                    интерпретации, +50% достоверности в оценке рисков.
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <Microscope className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <p>
-                    <strong>Уже сдавали ДНК?</strong> Загрузите свой отчёт MyGenetics,
-                    Atlas или 23andMe — наша панель пересекается с ними лишь на ~38%,
-                    остальное мы прочитаем точнее и новее.
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <p>
-                    <strong>Безопасность процедур.</strong> Blocks Beauty Safety + Аптечка
-                    отдельно отвечают на «что мне точно нельзя» — формула «не навреди»
-                    зашита в продукт.
-                  </p>
-                </div>
+          <CardContent className="p-8">
+            <h2 className="text-2xl font-bold tracking-tight">
+              Чем отличается отчёт Genesis
+            </h2>
+            <div className="mt-6 space-y-4 text-sm">
+              <div className="flex gap-3">
+                <FlaskConical className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <p>
+                  <strong>Свежая научная база.</strong> Обновлённые интерпретации 2025–2026,
+                  а не данные 10–15-летней давности.
+                </p>
               </div>
-            </div>
-            <div className="rounded-lg border bg-muted/30 p-5 text-sm">
-              <p className="font-medium">Сравнение с MyGenetics «Эксперт»</p>
-              <div className="mt-3 space-y-2 text-muted-foreground">
-                <div>MyGenetics: 55 генов — 27 900 ₽</div>
-                <div>
-                  <span className="text-foreground">Genesis Блок 1: 55 ген-точек —{" "}
-                  {formatPrice(blocks[0]?.price ?? 0)}</span>
-                </div>
+              <div className="flex gap-3">
+                <Microscope className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <p>
+                  <strong>Уже сдавали ДНК?</strong> Загрузите отчёт MyGenetics, Atlas или
+                  23andMe — наша панель пересекается с ними лишь частично, остальное мы
+                  прочитаем точнее и новее.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <p>
+                  <strong>Отдельный слой безопасности.</strong> Beauty Safety + Аптечка
+                  (фармакогенетика) отвечают на «что мне точно нельзя» — формула «не
+                  навреди» зашита в продукт.
+                </p>
               </div>
             </div>
           </CardContent>
@@ -232,12 +217,12 @@ export default async function ProductsPage() {
 
 const FAQ_ITEMS = [
   {
-    q: "Можно ли купить только один блок?",
-    a: "Да. Базовый блок «Стройность и питание» стоит 15 900 ₽. Любой следующий блок добавляется потом — биоматериал читается один раз, доплачиваете только за интерпретацию.",
+    q: "С чего начинается отчёт?",
+    a: "Первый шаг — блок «Стройность и питание» (15 900 ₽). Это вход в отчёт: с него открываются остальные блоки. Биоматериал читается один раз — за следующие блоки доплачиваете только интерпретацию. Блок «Риски + Аптечка» можно взять и отдельно.",
   },
   {
-    q: "Что, если я уже сдавал ДНК в другой лаборатории?",
-    a: "Загрузите свой отчёт в личный кабинет. Совпадение с нашей панелью обычно около 38% — остальное мы прочитаем точнее и по обновлённой научной базе.",
+    q: "Что, если я уже сдавал ДНК?",
+    a: "Загрузите свой отчёт в личный кабинет. Наша панель пересекается с MyGenetics, Atlas или 23andMe лишь частично — остальное мы прочитаем точнее и по обновлённой научной базе 2025–2026.",
   },
   {
     q: "Является ли ДНК-отчёт медицинским диагнозом?",

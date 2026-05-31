@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Dna, MessageSquare, Sparkles } from "lucide-react";
 import { pluralize } from "@/lib/format";
-import { getAllMarkers, groupMarkersByGene } from "@/lib/genetic-quiz/quiz-logic";
+import { BLOCKS_SNP } from "@/lib/genetics/blocks-snp";
 
 export const dynamic = "force-dynamic";
 
@@ -50,10 +50,8 @@ export default async function BlockPage({ params }: PageProps) {
     ? calculateSavings(fullPackage.price, fullPackage.compareAtPrice)
     : 0;
 
-  // Список ген-точек: для Блока 1 мы знаем точные rs из quiz-logic,
-  // для блоков 2-5 авторских списков пока нет — честный плейсхолдер.
-  const showGeneList = block.slug === "nutrition";
-  const geneGroups = showGeneList ? groupMarkersByGene(getAllMarkers()) : [];
+  // Список ген-точек из источника истины blocks-snp.ts (для всех 5 блоков).
+  const snpBlock = BLOCKS_SNP.find((b) => b.slug === slug);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
@@ -109,6 +107,7 @@ export default async function BlockPage({ params }: PageProps) {
                 price: block.price,
                 categoryName: "Красивое долголетие",
                 markersCount: block.markersCount,
+                productType: "block",
               }}
             />
             {fullPackage && savingsVsAnchor > 0 && (
@@ -153,29 +152,29 @@ export default async function BlockPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* ── Гены ──────────────────────────────────────────────── */}
-      <section className="mt-16">
-        <h2 className="text-2xl font-bold tracking-tight">Какие гены в этом блоке</h2>
-        {showGeneList ? (
-          <>
-            <p className="mt-2 text-muted-foreground">
-              Уникальные гены панели, обеспечивающие интерпретацию по этим болям.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {geneGroups.map((g) => (
-                <Badge key={g.gene} variant="secondary" className="font-mono text-xs">
-                  {g.gene} ({g.rsList.length})
-                </Badge>
-              ))}
-            </div>
-          </>
-        ) : (
+      {/* ── Ген-точки (SNP) ───────────────────────────────────── */}
+      {snpBlock && (
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Ген-точки, которые читает этот блок
+          </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Полный список rs-точек этого блока будет опубликован после релиза. В отчёте
-            каждый ген получает свою интерпретацию — без сырых rs-кодов.
+            Считаем именно ген-точки (SNP), а не гены: у одного гена может быть несколько
+            значимых точек.
           </p>
-        )}
-      </section>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {snpBlock.snps.map((s) => (
+              <span
+                key={`${s.gene}:${s.rs}`}
+                className="rounded-md border bg-muted/40 px-2 py-1 text-xs"
+              >
+                {s.gene}{" "}
+                <span className="text-muted-foreground">{s.rs}</span>
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Дисклеймер ───────────────────────────────────────── */}
       <p className="mt-16 text-center text-xs text-muted-foreground">

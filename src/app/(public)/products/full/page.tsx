@@ -86,6 +86,7 @@ export default async function FullPackagePage() {
                 price: fullPackage.price,
                 categoryName: "Красивое долголетие",
                 markersCount: null,
+                productType: "package",
               }}
             />
             <div className="space-y-2 text-sm">
@@ -204,6 +205,7 @@ export default async function FullPackagePage() {
               price: fullPackage.price,
               categoryName: "Красивое долголетие",
               markersCount: null,
+              productType: "package",
             }}
           />
         </div>

@@ -60,7 +60,7 @@ export async function getActiveBlocks(): Promise<ProductBlock[]> {
     .select()
     .from(tests)
     .where(and(eq(tests.productType, "block"), eq(tests.isActive, true)))
-    .orderBy(asc(tests.price), asc(tests.code));
+    .orderBy(asc(tests.code));
   return rows.map((r) => ({
     id: r.id,
     slug: r.slug,

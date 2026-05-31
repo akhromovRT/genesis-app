@@ -199,6 +199,7 @@ export default async function TestPage({ params }: TestPageProps) {
                   price: test.price,
                   categoryName: test.categories.name,
                   markersCount: test.markers_count,
+                  productType: "test",
                 }}
               />
 
