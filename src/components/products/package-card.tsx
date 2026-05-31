@@ -77,8 +77,8 @@ export function PackageCard({ pkg, blocksBySlug, emphasis = false, ctaHref }: Pa
             <div className="flex items-start gap-2">
               <Gift className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
               <span>
-                <span className="font-medium">{giftBlock.name}</span>{" "}
-                <span className="text-muted-foreground">— в подарок</span>
+                <span className="font-medium">Блок 4 «Мозг, сон, стресс»</span>{" "}
+                <span className="text-muted-foreground">— в подарок при покупке любых двух блоков</span>
               </span>
             </div>
           )}

@@ -38,7 +38,7 @@ function toRuleItems(items: CartItem[]): RuleItem[] {
 const GIFT_CART_ITEM: Omit<CartItem, "quantity"> = {
   id: "gift-mind",
   slug: "mind",
-  name: "Мозг, сон, стресс и мотивация — в подарок",
+  name: "Блок 4 «Мозг, сон, стресс» — в подарок",
   price: 0,
   categoryName: "Подарок",
   markersCount: 12,
