@@ -4,7 +4,7 @@ import { EarlyAccessForm } from "./form";
 export const metadata: Metadata = {
   title: "Early Access — Genesis · Красивое долголетие по вашей ДНК",
   description:
-    "Genesis — расширенная панель 225 ген-точек и научная база 2025–2026 года. Wellness-трио за 27 900 ₽ (обычная цена 42 900 ₽) или полный пакет 55 900 ₽ с 2 ч консультации Галины Хусаиновой. Только для гостей круглого стола.",
+    "Genesis — расширенная панель 225 ген-точек и научная база 2025–2026 года. Wellness-трио за 27 900 ₽ (обычная цена 42 900 ₽) или полный пакет 65 000 ₽ с 2 ч консультации Галины Хусаиновой. Только для гостей круглого стола.",
 };
 
 // Тексты блоков — дословно по спецификации Галины (TG 2026-05-27 18:28).
@@ -213,11 +213,10 @@ export default function EarlyAccessPage() {
           className="text-3xl md:text-4xl font-light leading-tight mb-10"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
         >
-          От{" "}
           <em style={{ color: "#1F6B4A", fontStyle: "italic" }}>
-            «что со мной не так»
+            Шаг за шагом
           </em>{" "}
-          — к персональному протоколу
+          к персональному протоколу
         </h2>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -388,7 +387,7 @@ export default function EarlyAccessPage() {
                 экспертом-разработчиком проекта.
               </p>
               <p className="text-[0.7rem] mb-2 font-medium tracking-[0.32em] uppercase text-amber-200">
-                Горячий тариф Early Access
+                Полный пакет «Красивое долголетие»
               </p>
               <div
                 className="text-5xl md:text-6xl font-light leading-none mb-6"
@@ -397,7 +396,7 @@ export default function EarlyAccessPage() {
                   letterSpacing: "-0.04em",
                 }}
               >
-                55 900 <sup className="text-sm text-amber-200">₽</sup>
+                65 000 <sup className="text-sm text-amber-200">₽</sup>
               </div>
               <p className="text-[0.7rem] mb-3 font-medium tracking-[0.32em] uppercase text-amber-200">
                 В полном пакете
