@@ -19,7 +19,7 @@ import { ArrowRight, ShieldCheck, FlaskConical, Microscope } from "lucide-react"
 export const metadata: Metadata = {
   title: "ДНК-отчёт «Красивое долголетие» — 5 блоков и пакеты | Genesis",
   description:
-    "Персональная ДНК-карта по 225 ген-точкам: питание, тело, кожа, мозг, риски. От базового блока 15 900 ₽ до полного отчёта 65 000 ₽.",
+    "Персональная ДНК-карта по 184 ген-точкам: питание, тело, кожа, мозг, риски. От базового блока 15 900 ₽ до полного отчёта 65 000 ₽.",
 };
 
 const HIGHLIGHT_BY_SLUG: Record<string, "entry" | "bestseller" | null> = {
@@ -44,7 +44,7 @@ export default async function ProductsPage() {
           Красивое долголетие по вашей ДНК
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-          Полный ДНК-отчёт «Красивое долголетие» — 225 ген-точек в 5 блоках. Можно взять
+          Полный ДНК-отчёт «Красивое долголетие» — 184 ген-точки в 5 блоках. Можно взять
           целиком, со скидкой и 2 часами консультации, — или пройти путь пошагово, начиная
           с питания.
         </p>
@@ -62,7 +62,7 @@ export default async function ProductsPage() {
                 </h2>
                 <p className="mt-3 text-muted-foreground">
                   Все 5 блоков сразу: питание, тело, кожа, мозг, риски и аптечка.
-                  225 ген-точек, 2 часа персональной консультации,
+                  184 ген-точки, 2 часа персональной консультации,
                   экономия {formatPrice(fullPackage.compareAtPrice! - fullPackage.price)} по
                   сравнению с пошаговой сборкой.
                 </p>
