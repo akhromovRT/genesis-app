@@ -109,6 +109,7 @@ export default async function BlockPage({ params }: PageProps) {
                 price: block.price,
                 categoryName: "Красивое долголетие",
                 markersCount: block.markersCount,
+                productType: "block",
               }}
             />
             {fullPackage && savingsVsAnchor > 0 && (

@@ -104,6 +104,7 @@ export function PackageCard({ pkg, blocksBySlug, emphasis = false, ctaHref }: Pa
             price: pkg.price,
             categoryName: "Красивое долголетие",
             markersCount: null,
+            productType: "package",
           }}
         />
         {ctaHref && (

@@ -63,6 +63,7 @@ export function TestCard({ test }: TestCardProps) {
             price: test.price,
             categoryName: test.categories.name,
             markersCount: test.markers_count,
+            productType: "test",
           }}
         />
       </CardFooter>

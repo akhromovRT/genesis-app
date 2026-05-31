@@ -17,7 +17,16 @@ export function AddToCartButton({ test, size = "default", className }: AddToCart
   const [added, setAdded] = useState(false);
 
   function handleAdd() {
-    addItem(test);
+    const result = addItem(test);
+    if (!result.ok) {
+      if (result.reason === "nutrition-required") {
+        toast.error("Начните с Блока 1 «Питание»", {
+          description:
+            "Остальные блоки открываются после него — это первый шаг воронки.",
+        });
+      }
+      return;
+    }
     setAdded(true);
     toast.success(`${test.name} добавлен в корзину`);
     setTimeout(() => setAdded(false), 2000);
