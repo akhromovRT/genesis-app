@@ -18,9 +18,9 @@ import { Check, Gift, MessageSquare, ArrowRight, Dna } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Полный пакет «Красивое долголетие» — 225 ген-точек, 65 000 ₽ | Genesis",
+  title: "Полный пакет «Красивое долголетие» — 184 ген-точки, 65 000 ₽ | Genesis",
   description:
-    "Все 5 блоков ДНК-отчёта одной покупкой. 225 ген-точек, 2 ч консультации, экономия 24 900 ₽ vs поштучная сборка.",
+    "Все 5 блоков ДНК-отчёта одной покупкой. 184 ген-точки, 2 ч консультации, экономия 24 900 ₽ vs поштучная сборка.",
 };
 
 export default async function FullPackagePage() {
@@ -52,8 +52,8 @@ export default async function FullPackagePage() {
             Полный отчёт «Красивое долголетие»
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Все 5 блоков сразу: питание, тело, кожа, мозг, риски и аптечка. 225
-            ген-точек одной картой + 2 часа персональной консультации с экспертом.
+            Все 5 блоков сразу: питание, тело, кожа, мозг, риски и аптечка. 184
+            ген-точки одной картой + 2 часа персональной консультации с экспертом.
           </p>
           <p className="mt-4 text-sm leading-relaxed">{fullPackage.fullDescription}</p>
         </div>
@@ -92,7 +92,7 @@ export default async function FullPackagePage() {
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
                 <Dna className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>225 генетических точек</span>
+                <span>184 генетические точки</span>
               </div>
               <div className="flex items-start gap-2">
                 <MessageSquare className="mt-0.5 h-4 w-4 shrink-0 text-primary" />

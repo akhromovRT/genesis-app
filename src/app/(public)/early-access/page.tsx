@@ -4,7 +4,7 @@ import { EarlyAccessForm } from "./form";
 export const metadata: Metadata = {
   title: "Early Access — Genesis · Красивое долголетие по вашей ДНК",
   description:
-    "Genesis — расширенная панель 225 ген-точек и научная база 2025–2026 года. Wellness-трио за 27 900 ₽ (обычная цена 42 900 ₽) или полный пакет 65 000 ₽ с 2 ч консультации Галины Хусаиновой. Только для гостей круглого стола.",
+    "Genesis — расширенная панель 184 ген-точки и научная база 2025–2026 года. Wellness-трио за 27 900 ₽ (обычная цена 42 900 ₽) или полный пакет 65 000 ₽ с 2 ч консультации Галины Хусаиновой. Только для гостей круглого стола.",
 };
 
 // Тексты блоков — дословно по спецификации Галины (TG 2026-05-27 18:28).
@@ -136,9 +136,9 @@ export default function EarlyAccessPage() {
                     fontFamily: "'Cormorant Garamond', serif",
                   }}
                 >
-                  225
+                  184
                 </span>
-                ген-точек
+                ген-точки
               </div>
               <div>
                 <span
@@ -181,12 +181,12 @@ export default function EarlyAccessPage() {
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
               }}
             >
-              до +50<sup className="text-base text-stone-400">%</sup>
+              до +30<sup className="text-base text-stone-400">%</sup>
             </div>
             <p className="mt-4 text-sm text-stone-700 leading-relaxed">
               больше проверенных ген-точек по сравнению с типовыми ДНК-панелями
               на 140–150 маркеров. Genesis использует расширенную панель из{" "}
-              <strong>225 ген-точек</strong> и обновлённую научную базу{" "}
+              <strong>184 ген-точки</strong> и обновлённую научную базу{" "}
               <strong>2025–2026 года</strong>.
             </p>
             <p className="mt-3 text-sm text-stone-600 leading-relaxed">
@@ -383,7 +383,7 @@ export default function EarlyAccessPage() {
                 className="text-base text-stone-100/85 mb-6 leading-relaxed"
                 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
               >
-                225 ген-точек + 5 блоков + 2 часа консультации с
+                184 ген-точки + 5 блоков + 2 часа консультации с
                 экспертом-разработчиком проекта.
               </p>
               <p className="text-[0.7rem] mb-2 font-medium tracking-[0.32em] uppercase text-amber-200">
@@ -403,7 +403,7 @@ export default function EarlyAccessPage() {
               </p>
               <ul className="space-y-2.5 text-base leading-snug">
                 {[
-                  "Полная панель «Долголетие» на 225 ген-точек",
+                  "Полная панель «Долголетие» на 184 ген-точки",
                   "Все 5 модульных блоков",
                   "Разбор питания, тела, кожи, сна, стресса, основных рисков здоровья и безопасной аптечки",
                   "2 часа онлайн-консультации с Галиной Хусаиновой",
