@@ -42,12 +42,14 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          items: items.map((item) => ({
-            testId: item.id,
-            testName: item.name,
-            price: item.price,
-            quantity: item.quantity,
-          })),
+          items: items
+            .filter((i) => !i.isGift)
+            .map((item) => ({
+              testId: item.id,
+              testName: item.name,
+              price: item.price,
+              quantity: item.quantity,
+            })),
         }),
       });
 
@@ -183,9 +185,15 @@ export default function CheckoutPage() {
                         </p>
                       )}
                     </div>
-                    <p className="font-medium">
-                      {formatPrice(item.price * item.quantity)}
-                    </p>
+                    {item.isGift ? (
+                      <span className="text-sm font-medium text-emerald-600">
+                        Подарок
+                      </span>
+                    ) : (
+                      <p className="font-medium">
+                        {formatPrice(item.price * item.quantity)}
+                      </p>
+                    )}
                   </div>
                 ))}
 
